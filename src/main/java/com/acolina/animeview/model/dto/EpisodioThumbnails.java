@@ -25,8 +25,8 @@ public class EpisodioThumbnails {
 
     private String url;
     private String urlImg;
-    private String capitulo;
-    private String titulo;
+    private String episode;
+    private String tittle;
     @JsonIgnore
     private String base64;
 
@@ -49,20 +49,20 @@ public class EpisodioThumbnails {
         this.urlImg = urlImg;
     }
 
-    public String getCapitulo() {
-        return capitulo;
+    public String getEpisode() {
+        return episode;
     }
 
-    public void setCapitulo(String capitulo) {
-        this.capitulo = capitulo;
+    public void setEpisode(String episode) {
+        this.episode = episode;
     }
 
-    public String getTitulo() {
-        return titulo;
+    public String getTittle() {
+        return tittle;
     }
 
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
+    public void setTittle(String tittle) {
+        this.tittle = tittle;
     }
 
     public String getBase64() {

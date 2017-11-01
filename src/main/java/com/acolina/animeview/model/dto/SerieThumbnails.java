@@ -25,7 +25,8 @@ public class SerieThumbnails {
 
     private String url;
     private String urlImg;
-    private String titulo;
+    private String tittle;
+    private SerieDescriptionThumbnails description;
     @JsonIgnore
     private String base64;
 
@@ -48,12 +49,12 @@ public class SerieThumbnails {
         this.urlImg = urlImg;
     }
 
-    public String getTitulo() {
-        return titulo;
+    public String getTittle() {
+        return tittle;
     }
 
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
+    public void setTittle(String tittle) {
+        this.tittle = tittle;
     }
 
     public String getBase64() {
@@ -62,6 +63,14 @@ public class SerieThumbnails {
 
     public void setBase64(String base64) {
         this.base64 = base64;
+    }
+
+    public SerieDescriptionThumbnails getDescription() {
+        return description;
+    }
+
+    public void setDescription(SerieDescriptionThumbnails description) {
+        this.description = description;
     }
 
 }

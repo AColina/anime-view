@@ -16,6 +16,7 @@
 package com.acolina.animeview.util.jsoup;
 
 import com.acolina.animeview.model.dto.EpisodioThumbnails;
+import com.acolina.animeview.model.dto.SerieDescriptionThumbnails;
 import com.acolina.animeview.model.dto.SerieThumbnails;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,8 +51,8 @@ public class AnimeFlvDecoder {
                 ? defaultStr
                 : "/uploads/animes/covers".concat(defaultStr.substring(defaultStr.indexOf("thumbs") + 6))
         );
-        e.setCapitulo(aTag.select(".Capi").get(0).text());
-        e.setTitulo(aTag.select(".Title").get(0).text());
+        e.setEpisode(aTag.select(".Capi").get(0).text());
+        e.setTittle(aTag.select(".Title").get(0).text());
 
         return e;
     }
@@ -69,9 +70,14 @@ public class AnimeFlvDecoder {
         Element aTag = element.select(".Anime a").get(0);
         e.setUrl(aTag.attr("href"));
         e.setUrlImg(aTag.select("img").get(0).attr("src"));
-//        e.setCapitulo(aTag.select(".Capi").get(0).text());
-        e.setTitulo(aTag.select(".Title").get(0).text());
+        e.setTittle(aTag.select(".Title").get(0).text());
 
+        SerieDescriptionThumbnails d = new SerieDescriptionThumbnails();
+        Element divTag = element.select(".Anime .Description").get(0);
+        d.setRating(divTag.select("p .Vts").get(0).text());
+        d.setText(divTag.select("p").get(1).text());
+        d.setType(divTag.select("p .Type").get(0).text());
+        e.setDescription(d);
         return e;
     }
 }

@@ -32,7 +32,7 @@ public class SerieController {
     @Autowired
     AnimeFlvDecoder animeFlvDecoder;
 
-    @RequestMapping(method = RequestMethod.GET, value = "toDay")
+    @RequestMapping(method = RequestMethod.GET, value = "recent")
     public @ResponseBody
     ResponseEntity<List<SerieThumbnails>> findDay() throws Exception {
 

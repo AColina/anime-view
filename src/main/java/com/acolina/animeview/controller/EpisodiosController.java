@@ -37,7 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author angel
  */
 @RestController
-@RequestMapping("/episodio/")
+@RequestMapping("/episode/")
 public class EpisodiosController {
 
     @Autowired
@@ -57,7 +57,7 @@ public class EpisodiosController {
 
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "toDay")
+    @RequestMapping(method = RequestMethod.GET, value = "recent")
     public @ResponseBody
     ResponseEntity<List<EpisodioThumbnails>> findDay() throws Exception {
 
