@@ -15,15 +15,10 @@
  */
 package com.acolina.animeview.util.jsoup;
 
-import com.acolina.animeview.config.AppConfig;
 import com.acolina.animeview.model.dto.EpisodioThumbnails;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
+import com.acolina.animeview.model.dto.SerieThumbnails;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.IOUtils;
 import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Service;
 
@@ -35,28 +30,48 @@ import org.springframework.stereotype.Service;
 public class AnimeFlvDecoder {
 
     public List<EpisodioThumbnails> decodeEpisodiosThumbnails(Element element, String selector) throws Exception {
+        return decodeEpisodiosThumbnails(element, selector, true);
+    }
+
+    public List<EpisodioThumbnails> decodeEpisodiosThumbnails(Element element, String selector, boolean defaultImage) throws Exception {
         List<EpisodioThumbnails> eps = new ArrayList<>();
         for (Element el : element.select(selector)) {
-            eps.add(decodeEpisodioThumbnails(el));
+            eps.add(decodeEpisodioThumbnails(el, defaultImage));
         }
         return eps;
     }
 
-    public EpisodioThumbnails decodeEpisodioThumbnails(Element element) throws Exception {
+    public EpisodioThumbnails decodeEpisodioThumbnails(Element element, boolean defaultImage) throws Exception {
         EpisodioThumbnails e = new EpisodioThumbnails();
         Element aTag = element.children().get(0);
         e.setUrl(aTag.attr("href"));
-        e.setUrlImg(aTag.select("img").get(0).attr("src"));
+        String defaultStr = aTag.select("img").get(0).attr("src");
+        e.setUrlImg(defaultImage
+                ? defaultStr
+                : "/uploads/animes/covers".concat(defaultStr.substring(defaultStr.indexOf("thumbs") + 6))
+        );
         e.setCapitulo(aTag.select(".Capi").get(0).text());
         e.setTitulo(aTag.select(".Title").get(0).text());
 
-        URL urla = new URL(AppConfig.URL.concat(e.getUrlImg()));
-        URLConnection conn = urla.openConnection();
-        conn.setRequestProperty("User-Agent", "Mozilla/5.0");
-        InputStream in = conn.getInputStream();
+        return e;
+    }
 
-        String str64 = new String(Base64.encodeBase64(IOUtils.toByteArray(in)));
-        e.setBase64(str64);
+    public List<SerieThumbnails> decodeSeriesThumbnails(Element element, String selector) throws Exception {
+        List<SerieThumbnails> eps = new ArrayList<>();
+        for (Element el : element.select(selector)) {
+            eps.add(decodeSerieThumbnails(el));
+        }
+        return eps;
+    }
+
+    public SerieThumbnails decodeSerieThumbnails(Element element) throws Exception {
+        SerieThumbnails e = new SerieThumbnails();
+        Element aTag = element.select(".Anime a").get(0);
+        e.setUrl(aTag.attr("href"));
+        e.setUrlImg(aTag.select("img").get(0).attr("src"));
+//        e.setCapitulo(aTag.select(".Capi").get(0).text());
+        e.setTitulo(aTag.select(".Title").get(0).text());
+
         return e;
     }
 }

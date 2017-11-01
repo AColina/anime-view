@@ -63,7 +63,7 @@ public class EpisodiosController {
 
         try {
             Document doc = Jsoup.connect(AppConfig.URL).get();
-            return new ResponseEntity<>(animeFlvDecoder.decodeEpisodiosThumbnails(doc, "main .ListEpisodios li"), HttpStatus.OK);
+            return new ResponseEntity<>(animeFlvDecoder.decodeEpisodiosThumbnails(doc, "main .ListEpisodios li", false), HttpStatus.OK);
         } catch (Exception ex) {
             Logger.getLogger(EpisodiosController.class.getName()).log(Level.SEVERE, null, ex);
             throw ex;

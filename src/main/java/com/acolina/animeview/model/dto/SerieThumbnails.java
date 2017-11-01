@@ -21,16 +21,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  *
  * @author angel
  */
-public class EpisodioThumbnails {
+public class SerieThumbnails {
 
     private String url;
     private String urlImg;
-    private String capitulo;
     private String titulo;
     @JsonIgnore
     private String base64;
 
-    public EpisodioThumbnails() {
+    public SerieThumbnails() {
     }
 
     public String getUrl() {
@@ -47,14 +46,6 @@ public class EpisodioThumbnails {
 
     public void setUrlImg(String urlImg) {
         this.urlImg = urlImg;
-    }
-
-    public String getCapitulo() {
-        return capitulo;
-    }
-
-    public void setCapitulo(String capitulo) {
-        this.capitulo = capitulo;
     }
 
     public String getTitulo() {
