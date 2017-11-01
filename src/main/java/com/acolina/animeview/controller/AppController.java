@@ -30,6 +30,6 @@ public class AppController {
     @RequestMapping(method = RequestMethod.GET)
     public @ResponseBody
     String body() {
-        return "LOAD APP";
+        return "TE AMO ANDREA";
     }
 }
