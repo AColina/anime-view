@@ -20,6 +20,8 @@ package com.acolina.animeview.controller;
 import com.acolina.animeview.config.AppConfig;
 import com.acolina.animeview.model.dto.EpisodioThumbnails;
 import com.acolina.animeview.util.jsoup.AnimeFlvDecoder;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -40,6 +42,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/episode/")
+@Api(value = "episode", description = "Controlador rest para los episodios")
 public class EpisodiosController {
 
     @Autowired
@@ -60,6 +63,7 @@ public class EpisodiosController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "recent")
+    @ApiOperation(value = "Obtiene una lista de episodios cargados recientemente")
     public @ResponseBody
     ResponseEntity<List<EpisodioThumbnails>> recent() throws Exception {
 

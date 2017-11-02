@@ -20,6 +20,8 @@ package com.acolina.animeview.controller;
 import com.acolina.animeview.config.AppConfig;
 import com.acolina.animeview.model.dto.SerieThumbnails;
 import com.acolina.animeview.util.jsoup.AnimeFlvDecoder;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,12 +41,14 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/serie/")
+@Api(value = "serie", description = "Controlador rest para los serie")
 public class SerieController {
 
     @Autowired
     AnimeFlvDecoder animeFlvDecoder;
 
     @RequestMapping(method = RequestMethod.GET, value = "recent")
+    @ApiOperation(value = "Obtiene una lista de series cargados recientemente")
     public @ResponseBody
     ResponseEntity<List<SerieThumbnails>> recent() throws Exception {
 
@@ -59,6 +63,7 @@ public class SerieController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "emission")
+    @ApiOperation(value = "Obtiene una lista de series en emision")
     public @ResponseBody
     ResponseEntity<List<SerieThumbnails>> emission() throws Exception {
         try {
