@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author angel
  */
-@RestController
+//@RestController
 public class AppController {
 
     @RequestMapping(method = RequestMethod.GET)
