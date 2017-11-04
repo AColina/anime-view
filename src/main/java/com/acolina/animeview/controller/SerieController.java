@@ -80,7 +80,7 @@ public class SerieController {
     @RequestMapping(method = RequestMethod.GET, value = "/emission")
     @ApiOperation(value = "Obtiene una lista de series en emision")
     public @ResponseBody
-    ResponseEntity<List<SerieThumbnails>> emission() throws Exception {
+    ResponseEntity<List<Serie>> emission() throws Exception {
         try {
             return new ResponseEntity<>(animeFlvDecoder.emissionSeriesThumbnails(), HttpStatus.OK);
         } catch (Exception ex) {

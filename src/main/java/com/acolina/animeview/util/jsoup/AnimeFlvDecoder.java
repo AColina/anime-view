@@ -28,6 +28,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 /**
  *
@@ -87,19 +88,16 @@ public class AnimeFlvDecoder {
         return e;
     }
 
-    public List<SerieThumbnails> emissionSeriesThumbnails() throws Exception {
-        List<SerieThumbnails> eps = new ArrayList<>();
+    public List<Serie> emissionSeriesThumbnails() throws Exception {
+        List<Serie> eps = new ArrayList<>();
         Document doc = Jsoup.connect(AppConfig.URL).get();
-        doc.select(".Sidebar .Emision ul.ListSdbr li").stream().map((el) -> {
-            SerieThumbnails e = new SerieThumbnails();
+        for (Element el : doc.select(".Sidebar .Emision ul.ListSdbr li")) {
             Element aTag = el.child(0);
-            e.setUrl(aTag.attr("href"));
-//            e.setUrlImg(aTag.select("img").get(0).attr("src"));
-            e.setTitle(aTag.text());
-            return e;
-        }).forEachOrdered((e) -> {
+            Serie e = decodeSerie(aTag.attr("href"));
             eps.add(e);
-        });
+        }
+//        RestTemplate restTemplate = new RestTemplate();
+//        restTemplate.getForEntity(url, responseType)
         return eps;
     }
 
@@ -145,7 +143,7 @@ public class AnimeFlvDecoder {
 
         doc.select(".Main .ListAnmRel li").forEach((Element liTag) -> {
             Serie.Links li = new Serie.Links();
-            
+
             li.setTitle(liTag.select("a").first().text());
 
             li.setText(liTag.text());
