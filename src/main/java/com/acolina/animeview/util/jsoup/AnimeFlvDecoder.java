@@ -58,7 +58,7 @@ public class AnimeFlvDecoder {
                 : "/uploads/animes/covers".concat(defaultStr.substring(defaultStr.indexOf("thumbs") + 6))
         );
         e.setEpisode(aTag.select(".Capi").get(0).text());
-        e.setTittle(aTag.select(".Title").get(0).text());
+        e.setTitle(aTag.select(".Title").get(0).text());
 
         return e;
     }
@@ -76,7 +76,7 @@ public class AnimeFlvDecoder {
         Element aTag = element.select(".Anime a").get(0);
         e.setUrl(aTag.attr("href"));
         e.setUrlImg(aTag.select("img").get(0).attr("src"));
-        e.setTittle(aTag.select(".Title").get(0).text());
+        e.setTitle(aTag.select(".Title").get(0).text());
 
         SerieDescriptionThumbnails d = new SerieDescriptionThumbnails();
         Element divTag = element.select(".Anime .Description").get(0);
@@ -95,7 +95,7 @@ public class AnimeFlvDecoder {
             Element aTag = el.child(0);
             e.setUrl(aTag.attr("href"));
 //            e.setUrlImg(aTag.select("img").get(0).attr("src"));
-            e.setTittle(aTag.text());
+            e.setTitle(aTag.text());
             return e;
         }).forEachOrdered((e) -> {
             eps.add(e);
@@ -113,7 +113,7 @@ public class AnimeFlvDecoder {
         s.setState(side.select("p.AnmStts span").first().text());
 
         Element f = doc.select(".Body .Ficha ").first();
-        
+
         s.setBackgroundImage(f.select("div.Bg").first().attr("style").replace("background-image:url(", "").replace(")", ""));
 
         Element ficha = doc.select(".Body .Ficha div.Container").first();
@@ -143,6 +143,15 @@ public class AnimeFlvDecoder {
             }
         });
 
+        doc.select(".Main .ListAnmRel li").forEach((Element liTag) -> {
+            Serie.Links li = new Serie.Links();
+            
+            li.setTitle(liTag.select("a").first().text());
+
+            li.setText(liTag.text());
+            li.setUrl(liTag.select("a").first().attr("href"));
+            s.getLinks().add(li);
+        });
         return s;
     }
 }

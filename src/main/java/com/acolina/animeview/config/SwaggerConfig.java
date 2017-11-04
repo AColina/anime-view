@@ -52,7 +52,7 @@ public class SwaggerConfig {
                 "Anime-View REST API for Online Store",
                 "0.0.1",
                 "Terms of service",
-                new Contact("Angel Colina", "", "angelcolina13@gmail.com"),
+                new Contact("Anime-view", "", "angelcolina13@gmail.com"),
                 "Apache License Version 2.0",
                 "https://www.apache.org/licenses/LICENSE-2.0", new ArrayList<>());
         return apiInfo;

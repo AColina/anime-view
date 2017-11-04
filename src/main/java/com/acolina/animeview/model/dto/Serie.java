@@ -20,6 +20,7 @@ package com.acolina.animeview.model.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -31,7 +32,7 @@ public class Serie {
     private String urlFront;
     private String synopsis;
     private List<String> genders;
-    private String links;
+    private List<Serie.Links> links;
     private String state;
     private String type;
     private String backgroundImage;
@@ -64,7 +65,7 @@ public class Serie {
     }
 
     public List<String> getGenders() {
-        if (genders == null) {
+        if (Objects.isNull(genders)) {
             genders = new ArrayList<>();
         }
         return genders;
@@ -74,11 +75,14 @@ public class Serie {
         this.genders = genders;
     }
 
-    public String getLinks() {
+    public List<Serie.Links> getLinks() {
+        if (Objects.isNull(links)) {
+            links = new ArrayList<>();
+        }
         return links;
     }
 
-    public void setLinks(String links) {
+    public void setLinks(List<Serie.Links> links) {
         this.links = links;
     }
 
@@ -115,7 +119,7 @@ public class Serie {
     }
 
     public List<Episode> getEpisodes() {
-        if (episodes == null) {
+        if (Objects.isNull(episodes)) {
             episodes = new ArrayList<>();
         }
         return episodes;
@@ -174,6 +178,38 @@ public class Serie {
 
         public void setDate(String date) {
             this.date = date;
+        }
+
+    }
+
+    public static class Links {
+
+        private String url;
+        private String title;
+        private String text;
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public String getText() {
+            return text;
+        }
+
+        public void setText(String text) {
+            this.text = text;
         }
 
     }

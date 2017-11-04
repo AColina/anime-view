@@ -63,21 +63,11 @@ public class SimpleCORSFilter implements Filter {
         chain.doFilter(req, res);
     }
 
-    /*
-	 * (non-Javadoc)
-	 * 
-	 * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
-     */
     @Override
     public void init(FilterConfig filterConfig) {
 
     }
 
-    /*
-	 * (non-Javadoc)
-	 * 
-	 * @see javax.servlet.Filter#destroy()
-     */
     @Override
     public void destroy() {
 

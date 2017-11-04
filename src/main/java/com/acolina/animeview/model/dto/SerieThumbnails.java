@@ -30,7 +30,7 @@ public class SerieThumbnails {
 
     private String url;
     private String urlImg;
-    private String tittle;
+    private String title;
     private SerieDescriptionThumbnails description;
     @JsonIgnore
     private String base64;
@@ -54,12 +54,12 @@ public class SerieThumbnails {
         this.urlImg = urlImg;
     }
 
-    public String getTittle() {
-        return tittle;
+    public String getTitle() {
+        return title;
     }
 
-    public void setTittle(String tittle) {
-        this.tittle = tittle;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getBase64() {
