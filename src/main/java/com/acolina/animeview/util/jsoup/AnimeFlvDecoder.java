@@ -19,6 +19,7 @@ package com.acolina.animeview.util.jsoup;
 
 import com.acolina.animeview.config.AppConfig;
 import com.acolina.animeview.model.dto.EpisodioThumbnails;
+import com.acolina.animeview.model.dto.Serie;
 import com.acolina.animeview.model.dto.SerieDescriptionThumbnails;
 import com.acolina.animeview.model.dto.SerieThumbnails;
 import java.util.ArrayList;
@@ -100,5 +101,48 @@ public class AnimeFlvDecoder {
             eps.add(e);
         });
         return eps;
+    }
+
+    public Serie decodeSerie(String url) throws Exception {
+
+        Document doc = Jsoup.connect(AppConfig.URL.concat(url)).get();
+        Serie s = new Serie();
+        Element side = doc.select(".Body div.Container aside").first();
+
+        s.setUrlFront(side.select(".AnimeCover img").first().attr("src"));
+        s.setState(side.select("p.AnmStts span").first().text());
+
+        Element f = doc.select(".Body .Ficha ").first();
+        
+        s.setBackgroundImage(f.select("div.Bg").first().attr("style").replace("background-image:url(", "").replace(")", ""));
+
+        Element ficha = doc.select(".Body .Ficha div.Container").first();
+        s.setTitle(ficha.select(".Title").text());
+        s.setType(ficha.select(".Type").text());
+
+        Element main = doc.select(".Main").first();
+
+        main.select(".Nvgnrs a").forEach((genero) -> {
+            s.getGenders().add(genero.text());
+        });
+
+        s.setSynopsis(main.select(".WdgtCn .Description p").first().text());
+
+        main.select(".WdgtCn .ListCaps li.fa-play-circle a").forEach((Element atag) -> {
+            Serie.Episode epe = new Serie.Episode();
+
+            epe.setTitle(atag.select(".Title").first().text());
+            if (atag.attr("href").equals("#")) {
+                epe.setDate(atag.select(".Date").first().text());
+                s.setNextEpisode(epe);
+            } else {
+
+                epe.setName(atag.select("p").first().text());
+                epe.setUrl(atag.attr("href"));
+                s.getEpisodes().add(epe);
+            }
+        });
+
+        return s;
     }
 }

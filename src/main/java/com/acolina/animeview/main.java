@@ -16,6 +16,8 @@
 package com.acolina.animeview;
 
 
+import com.acolina.animeview.config.AppConfig;
+import com.acolina.animeview.model.dto.Serie;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlDivision;
@@ -37,6 +39,15 @@ import org.jsoup.nodes.Element;
 public class main {
 
     public static void main(String[] args) throws IOException {
+           Document doc = Jsoup.connect("https://animeflv.net/anime/4889/two-car").get();
+        Serie s = new Serie();
+        Element e = doc.select(".Body div.Container aside").first();
+//        System.out.println(e);
+//        System.out.println("sdss");
+//        System.out.println(e.select(".AnimeCover img"));
+        s.setUrlFront(e.select(".AnimeCover img").first().attr("src"));
+//        s.setEstado(e.select("body > div.Wrapper div.Container aside > p.AnmStts span").first().text());
+//        
         System.out.println("inicia");
 //         try (final WebClient webClient = new WebClient(BrowserVersion.CHROME)) {
              System.out.println("cargando pagina");

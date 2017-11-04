@@ -41,14 +41,14 @@ import org.springframework.web.bind.annotation.RestController;
  * @author angel
  */
 @RestController
-@RequestMapping("/episode/")
+@RequestMapping("/episode")
 @Api(value = "episode", description = "Controlador rest para los episodios")
 public class EpisodiosController {
 
     @Autowired
     AnimeFlvDecoder animeFlvDecoder;
 
-    @RequestMapping(method = RequestMethod.GET)
+//    @RequestMapping(method = RequestMethod.GET)
     public @ResponseBody
     ResponseEntity<List<EpisodioThumbnails>> getEpisodio(@RequestParam(required = true, value = "url") String Url) throws Exception {
 
@@ -62,7 +62,7 @@ public class EpisodiosController {
 
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "recent")
+    @RequestMapping(method = RequestMethod.GET, value = "/recent")
     @ApiOperation(value = "Obtiene una lista de episodios cargados recientemente")
     public @ResponseBody
     ResponseEntity<List<EpisodioThumbnails>> recent() throws Exception {
