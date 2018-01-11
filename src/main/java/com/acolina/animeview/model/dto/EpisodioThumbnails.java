@@ -75,4 +75,14 @@ public class EpisodioThumbnails {
         this.base64 = base64;
     }
 
+    @Override
+    public String toString() {
+        return "EpisodioThumbnails{" +
+                "url='" + url + '\'' +
+                ", urlImg='" + urlImg + '\'' +
+                ", episode='" + episode + '\'' +
+                ", title='" + title + '\'' +
+                ", base64='" + base64 + '\'' +
+                '}';
+    }
 }

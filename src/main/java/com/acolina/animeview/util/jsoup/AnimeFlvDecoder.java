@@ -18,24 +18,45 @@
 package com.acolina.animeview.util.jsoup;
 
 import com.acolina.animeview.config.AppConfig;
-import com.acolina.animeview.model.dto.EpisodioThumbnails;
-import com.acolina.animeview.model.dto.Serie;
-import com.acolina.animeview.model.dto.SerieDescriptionThumbnails;
-import com.acolina.animeview.model.dto.SerieThumbnails;
+import com.acolina.animeview.model.dto.*;
+
+import java.net.URI;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import com.acolina.animeview.model.entity.Episode;
+import com.acolina.animeview.model.entity.Links;
+import com.acolina.animeview.model.entity.Serie;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 /**
- *
  * @author angel
  */
 @Service
 public class AnimeFlvDecoder {
+
+    @Autowired
+    RestTemplate rt;
+    Pattern idPattern = Pattern.compile("\\/\\d+\\/");
+
+    public Integer getId(String url) {
+        Matcher matcher = idPattern.matcher(url);
+        matcher.find();
+        String id = matcher.group();
+        return Integer.parseInt(id.substring(1, id.length() - 1));
+    }
 
     public List<EpisodioThumbnails> decodeEpisodiosThumbnails(Element element, String selector) throws Exception {
         return decodeEpisodiosThumbnails(element, selector, true);
@@ -96,8 +117,7 @@ public class AnimeFlvDecoder {
             Serie e = decodeSerie(aTag.attr("href"));
             eps.add(e);
         }
-//        RestTemplate restTemplate = new RestTemplate();
-//        restTemplate.getForEntity(url, responseType)
+
         return eps;
     }
 
@@ -105,6 +125,13 @@ public class AnimeFlvDecoder {
 
         Document doc = Jsoup.connect(AppConfig.URL.concat(url)).get();
         Serie s = new Serie();
+        s.setUrl(url);
+
+
+        Matcher matcher = idPattern.matcher(url);
+        matcher.find();
+        String id = matcher.group();
+        s.setId(Integer.parseInt(id.substring(1, id.length() - 1)));
         Element side = doc.select(".Body div.Container aside").first();
 
         s.setUrlFront(side.select(".AnimeCover img").first().attr("src"));
@@ -127,7 +154,7 @@ public class AnimeFlvDecoder {
         s.setSynopsis(main.select(".WdgtCn .Description p").first().text());
 
         main.select(".WdgtCn .ListCaps li.fa-play-circle a").forEach((Element atag) -> {
-            Serie.Episode epe = new Serie.Episode();
+            Episode epe = new Episode();
 
             epe.setTitle(atag.select(".Title").first().text());
             if (atag.attr("href").equals("#")) {
@@ -141,8 +168,16 @@ public class AnimeFlvDecoder {
             }
         });
 
+        main.select(".WdgtCn .ListEpisodes li a").forEach((Element atag) -> {
+            Episode epe = new Episode();
+            epe.setTitle(atag.text());
+            epe.setUrl(atag.attr("href"));
+            s.getEpisodes().add(epe);
+
+        });
+
         doc.select(".Main .ListAnmRel li").forEach((Element liTag) -> {
-            Serie.Links li = new Serie.Links();
+            Links li = new Links();
 
             li.setTitle(liTag.select("a").first().text());
 
@@ -151,5 +186,54 @@ public class AnimeFlvDecoder {
             s.getLinks().add(li);
         });
         return s;
+    }
+
+
+    public EpisodeTemp decodeEpisode(String url) throws Exception {
+
+        Document doc = Jsoup.connect(AppConfig.URL.concat(url)).get();
+        EpisodeTemp ep = new EpisodeTemp();
+        Element container = doc.select(".Body div.Container .CpCn").first();
+
+        Element capOptions = container.select(".CpCnB .CapOptns").first();
+        ep.setUrlSerie(capOptions.select(".CapNv").first().getAllElements().last().attr("href"));
+        ep.setIdSerie(getId(ep.getUrlSerie()));
+        return ep;
+    }
+
+    public SearchSerieThumbnails decodeSerieSearch(Map<String, Object> urlParam) throws Exception {
+        SearchSerieThumbnails seah = new SearchSerieThumbnails();
+        StringBuilder url = new StringBuilder(AppConfig.URL.concat("/browse?"));
+        for (String key : urlParam.keySet()) {
+
+            Object value = urlParam.get(key);
+            if (value instanceof Number) {
+                value = ((Number) value).toString();
+            }
+            if (value instanceof String[]) {
+                for (String v : (String[]) value) {
+                    url.append(String.format("%s=%s&", URLEncoder.encode(key, "UTF-8"), v));
+                }
+            } else if (value instanceof Integer[]) {
+                for (Integer v : (Integer[]) value) {
+                    url.append(String.format("%s=%d&", URLEncoder.encode(key, "UTF-8"), v));
+                }
+            } else {
+                url.append(String.format("%s=%s&", URLEncoder.encode(key, "UTF-8"), value));
+            }
+        }
+        url.deleteCharAt(url.length() - 1);
+        ResponseEntity<String> res = rt.exchange(new URI(url.toString()), HttpMethod.GET, null, String.class);
+
+        Document doc = Jsoup.parse(res.getBody());
+        seah.setSeries(decodeSeriesThumbnails(doc, ".Body .CpCnA .Main .ListAnimes li"));
+        seah.setCurrentPage(Integer.parseInt(doc.select(".Body .Main .NvCnAnm .pagination .active a").first().text()));
+        Elements e = doc.select(".Body .Main .NvCnAnm .pagination li a");
+
+        seah.setMaxPage(Integer.parseInt(e.get(e.size() - 2).text()));
+        if (seah.getCurrentPage() > 1) {
+            seah.setLastPage(seah.getCurrentPage() - 1);
+        }
+        return seah;
     }
 }

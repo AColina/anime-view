@@ -20,6 +20,7 @@ package com.acolina.animeview.config;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.ImportResource;
 
 /**
  *
@@ -27,6 +28,7 @@ import org.springframework.context.annotation.ComponentScan;
  */
 @ComponentScan(basePackages = "com.acolina.animeview")
 @SpringBootApplication
+@ImportResource("classpath:quartz-context.xml")
 public class AppConfig {
 
     public static final String URL = "https://animeflv.net";

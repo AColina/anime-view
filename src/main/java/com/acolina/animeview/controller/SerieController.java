@@ -18,12 +18,16 @@
 package com.acolina.animeview.controller;
 
 import com.acolina.animeview.config.AppConfig;
-import com.acolina.animeview.model.dto.Serie;
+import com.acolina.animeview.model.dto.SearchSerieThumbnails;
 import com.acolina.animeview.model.dto.SerieThumbnails;
+import com.acolina.animeview.model.entity.Serie;
 import com.acolina.animeview.util.jsoup.AnimeFlvDecoder;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jsoup.Jsoup;
@@ -57,7 +61,19 @@ public class SerieController {
         try {
             return new ResponseEntity<>(animeFlvDecoder.decodeSerie(url), HttpStatus.OK);
         } catch (Exception ex) {
-            Logger.getLogger(EpisodiosController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SerieController.class.getName()).log(Level.SEVERE, null, ex);
+            throw ex;
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/emission")
+    @ApiOperation(value = "Obtiene una lista de series en emision")
+    public @ResponseBody
+    ResponseEntity<List<Serie>> emission() throws Exception {
+        try {
+            return new ResponseEntity<>(animeFlvDecoder.emissionSeriesThumbnails(), HttpStatus.OK);
+        } catch (Exception ex) {
+            Logger.getLogger(SerieController.class.getName()).log(Level.SEVERE, null, ex);
             throw ex;
         }
     }
@@ -71,20 +87,46 @@ public class SerieController {
             Document doc = Jsoup.connect(AppConfig.URL).get();
             return new ResponseEntity<>(animeFlvDecoder.decodeSeriesThumbnails(doc, "main .ListAnimes li"), HttpStatus.OK);
         } catch (Exception ex) {
-            Logger.getLogger(EpisodiosController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SerieController.class.getName()).log(Level.SEVERE, null, ex);
             throw ex;
         }
 
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/emission")
-    @ApiOperation(value = "Obtiene una lista de series en emision")
+    @RequestMapping(method = RequestMethod.GET, value = "/search")
+    @ApiOperation(value = "Obtiene una lista de series cargados recientemente")
     public @ResponseBody
-    ResponseEntity<List<Serie>> emission() throws Exception {
+    ResponseEntity<SearchSerieThumbnails> search(@RequestParam(value = "genders", required = false) String[] genders,
+            @RequestParam(value = "year", required = false) Integer[] year,
+            @RequestParam(value = "type", required = false) String[] type,
+            @RequestParam(value = "state", required = false) Integer[] state,
+            @RequestParam(value = "order", required = false, defaultValue = "default") String order,
+            @RequestParam(value = "page", required = false) Integer page
+    ) throws Exception {
         try {
-            return new ResponseEntity<>(animeFlvDecoder.emissionSeriesThumbnails(), HttpStatus.OK);
+            Map<String, Object> params = new HashMap<>();
+            if (Objects.nonNull(genders)) {
+                params.put("genders[]", genders);
+            }
+            if (Objects.nonNull(year)) {
+                params.put("year[]", year);
+            }
+            if (Objects.nonNull(type)) {
+                params.put("type[]", type);
+            }
+            if (Objects.nonNull(state)) {
+                params.put("status[]", state);
+            }
+            if (Objects.nonNull(order)) {
+                params.put("order", order);
+            }
+            if (Objects.nonNull(page)) {
+                params.put("page", page);
+            }
+
+            return new ResponseEntity<>(animeFlvDecoder.decodeSerieSearch(params), HttpStatus.OK);
         } catch (Exception ex) {
-            Logger.getLogger(EpisodiosController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SerieController.class.getName()).log(Level.SEVERE, null, ex);
             throw ex;
         }
 
