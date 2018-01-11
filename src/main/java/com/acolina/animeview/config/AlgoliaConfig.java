@@ -17,12 +17,23 @@
  */
 package com.acolina.animeview.config;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import com.algolia.search.APIClient;
+import com.algolia.search.ApacheAPIClientBuilder;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConditionalOnProperty(name = "quartz.enabled")
-public class ConfigureQuartz {
+public class AlgoliaConfig {
 
+    @Value("${algolia.applicationId}")
+    String applicationId;
 
+    @Value("${algolia.apiKey}")
+    String apiKey;
+
+    @Bean
+    public APIClient algoliaClient(){
+        return new ApacheAPIClientBuilder(applicationId, apiKey).build();
+    }
 }

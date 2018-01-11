@@ -28,6 +28,7 @@ public class Episode implements Serializable {
     private String name;
     private String url;
     private String date;
+    private Integer creationDate;
 
     public Episode() {
     }
@@ -64,4 +65,11 @@ public class Episode implements Serializable {
         this.date = date;
     }
 
+    public Integer getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Integer creationDate) {
+        this.creationDate = creationDate;
+    }
 }

@@ -25,6 +25,7 @@ import com.google.firebase.auth.FirebaseCredentials;
 import com.google.firebase.cloud.FirestoreClient;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
@@ -39,6 +40,9 @@ import java.io.InputStream;
 @Configuration
 public class FirebaseConfig {
 
+    @Value("${firestore.licence}")
+    String licenceName;
+
     @Bean
     public Firestore firebaseDatabse() {
         return FirestoreClient.getFirestore();
@@ -52,8 +56,7 @@ public class FirebaseConfig {
          *
          * Create service account , download json
          */
-
-        Resource resource = new ClassPathResource("adminsdk.json");
+        Resource resource = new ClassPathResource(licenceName);
         InputStream serviceAccount = resource.getInputStream();
         GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
 
