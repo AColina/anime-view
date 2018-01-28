@@ -26,8 +26,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 /**
- *
- * @author angel
+ * @author Angel Colina
  */
 @Configuration
 @Order(-20) // Very important

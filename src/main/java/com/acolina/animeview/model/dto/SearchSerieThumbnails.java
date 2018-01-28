@@ -20,8 +20,7 @@ package com.acolina.animeview.model.dto;
 import java.util.List;
 
 /**
- *
- * @author angel
+ * @author Angel Colina
  */
 public class SearchSerieThumbnails {
 

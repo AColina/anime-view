@@ -18,8 +18,7 @@
 package com.acolina.animeview.model.dto;
 
 /**
- *
- * @author angel
+ * @author Angel Colina
  */
 public class SerieDescriptionThumbnails {
 

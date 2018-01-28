@@ -28,9 +28,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.acolina.animeview.model.entity.Episode;
-import com.acolina.animeview.model.entity.Links;
-import com.acolina.animeview.model.entity.Serie;
+import com.acolina.animeview.model.entity.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -42,16 +40,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * @author angel
+ * @author Angel Colina
  */
 @Service
 public class AnimeFlvDecoder {
 
     @Autowired
-    RestTemplate rt;
-    Pattern idPattern = Pattern.compile("\\/\\d+\\/");
+    private RestTemplate rt;
+    private Pattern idPattern = Pattern.compile("\\/\\d+\\/");
 
-    public Integer getId(String url) {
+    private Integer getId(String url) {
         Matcher matcher = idPattern.matcher(url);
         matcher.find();
         String id = matcher.group();
@@ -131,7 +129,7 @@ public class AnimeFlvDecoder {
         Matcher matcher = idPattern.matcher(url);
         matcher.find();
         String id = matcher.group();
-        s.setId(Integer.parseInt(id.substring(1, id.length() - 1)));
+        s.setIdSerie(Integer.parseInt(id.substring(1, id.length() - 1)));
         Element side = doc.select(".Body div.Container aside").first();
 
         s.setUrlFront(side.select(".AnimeCover img").first().attr("src"));
@@ -154,14 +152,16 @@ public class AnimeFlvDecoder {
         s.setSynopsis(main.select(".WdgtCn .Description p").first().text());
 
         main.select(".WdgtCn .ListCaps li.fa-play-circle a").forEach((Element atag) -> {
-            Episode epe = new Episode();
 
-            epe.setTitle(atag.select(".Title").first().text());
+            String title = atag.select(".Title").first().text();
             if (atag.attr("href").equals("#")) {
+                NextEpisode epe = new NextEpisode();
+                epe.setTitle(title);
                 epe.setDate(atag.select(".Date").first().text());
                 s.setNextEpisode(epe);
             } else {
-
+                Episode epe = new Episode();
+                epe.setTitle(title);
                 epe.setName(atag.select("p").first().text());
                 epe.setUrl(atag.attr("href"));
                 s.getEpisodes().add(epe);
@@ -180,7 +180,6 @@ public class AnimeFlvDecoder {
             Links li = new Links();
 
             li.setTitle(liTag.select("a").first().text());
-
             li.setText(liTag.text());
             li.setUrl(liTag.select("a").first().attr("href"));
             s.getLinks().add(li);
@@ -188,8 +187,7 @@ public class AnimeFlvDecoder {
         return s;
     }
 
-
-    public EpisodeTemp decodeEpisode(String url) throws Exception {
+    public EpisodeTemp decodeEpisodeTemp(String url) throws Exception {
 
         Document doc = Jsoup.connect(AppConfig.URL.concat(url)).get();
         EpisodeTemp ep = new EpisodeTemp();
@@ -198,6 +196,35 @@ public class AnimeFlvDecoder {
         Element capOptions = container.select(".CpCnB .CapOptns").first();
         ep.setUrlSerie(capOptions.select(".CapNv").first().getAllElements().last().attr("href"));
         ep.setIdSerie(getId(ep.getUrlSerie()));
+
+        return ep;
+    }
+
+    public Episode decodeEpisode(String url) throws Exception {
+
+        Document doc = Jsoup.connect(AppConfig.URL.concat(url)).get();
+        Episode ep = new Episode();
+        Element container = doc.select(".Body div.Container .CpCn").first();
+
+        Elements eles = doc.select("script");
+        String script = eles.get(eles.size() - 3).html();
+        ep.setName(container.select(".CpCnA .CapiTop .SubTitle").text());
+        Elements servers = container.select(".CpCnA .CapiTnv li");
+        servers.forEach(li -> {
+            Video video = new Video();
+            video.setServer(li.attr("title"));
+            video.setOption(Integer.parseInt(li.select("a span").text()));
+            String format = String.format("video[%d] = ", video.getOption() - 1);
+            int indexOf = script.indexOf(format);
+            String urlAll = script.substring(indexOf + format.length() + 1, script.indexOf(";", indexOf));
+            int httpIndex = urlAll.indexOf("http");
+            if (httpIndex == -1) {
+                httpIndex = urlAll.indexOf("//");
+            }
+            video.setUrlVideo(urlAll.substring(httpIndex, urlAll.indexOf("\"", httpIndex)));
+            ep.getVideos().add(video);
+        });
+
         return ep;
     }
 

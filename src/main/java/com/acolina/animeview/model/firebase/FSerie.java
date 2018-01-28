@@ -15,16 +15,30 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package com.acolina.animeview.model.entity;
+package com.acolina.animeview.model.firebase;
+
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author Angel Colina
  */
-public class Links extends Entity {
+public class FSerie implements Serializable {
 
+    private Integer idSerie;
     private String url;
     private String title;
-    private String text;
+    private String state;
+    private String type;
+    private List<FEpisode> episodes;
+
+    public Integer getIdSerie() {
+        return idSerie;
+    }
+
+    public void setIdSerie(Integer idSerie) {
+        this.idSerie = idSerie;
+    }
 
     public String getUrl() {
         return url;
@@ -42,11 +56,27 @@ public class Links extends Entity {
         this.title = title;
     }
 
-    public String getText() {
-        return text;
+    public String getState() {
+        return state;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public List<FEpisode> getEpisodes() {
+        return episodes;
+    }
+
+    public void setEpisodes(List<FEpisode> episodes) {
+        this.episodes = episodes;
     }
 }

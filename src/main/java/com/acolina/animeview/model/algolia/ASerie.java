@@ -15,18 +15,15 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package com.acolina.animeview.model.entity;
+package com.acolina.animeview.model.algolia;
 
-
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.List;
-import java.util.Objects;
-
 
 /**
  * @author Angel Colina
  */
-public class Serie extends Entity {
+public class ASerie implements Serializable {
 
     private Integer idSerie;
     private String url;
@@ -34,13 +31,9 @@ public class Serie extends Entity {
     private String urlFront;
     private String synopsis;
     private List<String> genders;
-    private List<Links> links;
     private String state;
     private String type;
-    private String backgroundImage;
     private String rating;
-    private NextEpisode nextEpisode;
-    private List<Episode> episodes;
     private Integer year;
 
     public Integer getIdSerie() {
@@ -83,50 +76,12 @@ public class Serie extends Entity {
         this.synopsis = synopsis;
     }
 
-    public List<String> getGenders() {
-        if (Objects.isNull(genders)) {
-            genders = new ArrayList<>();
-        }
-        return genders;
-    }
-
-    public void setGenders(List<String> genders) {
-        this.genders = genders;
-    }
-
-    public List<Links> getLinks() {
-        if (Objects.isNull(links)) {
-            links = new ArrayList<>();
-        }
-        return links;
-    }
-
-    public void setLinks(List<Links> links) {
-        this.links = links;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
-    }
-
     public String getType() {
         return type;
     }
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public String getBackgroundImage() {
-        return backgroundImage;
-    }
-
-    public void setBackgroundImage(String backgroundImage) {
-        this.backgroundImage = backgroundImage;
     }
 
     public String getRating() {
@@ -137,23 +92,20 @@ public class Serie extends Entity {
         this.rating = rating;
     }
 
-    public List<Episode> getEpisodes() {
-        if (Objects.isNull(episodes)) {
-            episodes = new ArrayList<>();
-        }
-        return episodes;
+    public List<String> getGenders() {
+        return genders;
     }
 
-    public void setEpisodes(List<Episode> episodes) {
-        this.episodes = episodes;
+    public void setGenders(List<String> genders) {
+        this.genders = genders;
     }
 
-    public NextEpisode getNextEpisode() {
-        return nextEpisode;
+    public String getState() {
+        return state;
     }
 
-    public void setNextEpisode(NextEpisode nextEpisode) {
-        this.nextEpisode = nextEpisode;
+    public void setState(String state) {
+        this.state = state;
     }
 
     public Integer getYear() {

@@ -17,36 +17,35 @@
  */
 package com.acolina.animeview.model.entity;
 
-/**
- * @author Angel Colina
- */
-public class Links extends Entity {
+public class Video extends Entity {
 
-    private String url;
-    private String title;
-    private String text;
+    private String urlVideo;
+    private String server;
+    private Integer option;
 
-    public String getUrl() {
-        return url;
+    public String getUrlVideo() {
+        return urlVideo;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setUrlVideo(String urlVideo) {
+        this.urlVideo = urlVideo;
     }
 
-    public String getTitle() {
-        return title;
+    public String getServer() {
+        return server;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setServer(String server) {
+        this.server = server;
     }
 
-    public String getText() {
-        return text;
+    public Integer getOption() {
+        return option;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setOption(Integer option) {
+        this.option = option;
     }
+
+
 }

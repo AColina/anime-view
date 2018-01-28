@@ -20,8 +20,7 @@ package com.acolina.animeview.model.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
- *
- * @author angel
+ * @author Angel Colina
  */
 public class EpisodioThumbnails {
 

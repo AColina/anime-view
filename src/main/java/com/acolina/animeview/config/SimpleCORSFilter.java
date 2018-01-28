@@ -30,18 +30,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 
 /**
- *
- * @author angel
+ * @author Angel Colina
  */
 @Component
 public class SimpleCORSFilter implements Filter {
 
-    /*
-	 * (non-Javadoc)
-	 * 
-	 * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest,
-	 * javax.servlet.ServletResponse, javax.servlet.FilterChain)
-     */
+
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
             throws IOException, ServletException {
@@ -52,13 +46,7 @@ public class SimpleCORSFilter implements Filter {
         response.setHeader("Access-Control-Max-Age", "3600");
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-//		response.setHeader("Access-Control-Allow-Headers",
-//				"cache-control,Origin,X-Requested-With,Content-Type,Accept," //
-//						+ HeaderValueNames.HEADER_AREA_ID.getName() //
-//						+ "," + HeaderValueNames.HEADER_AUTH_TOKEN.getName() //
-//						+ "," + HeaderValueNames.HEADER_USER_KEY.getName()
-//						+ "," + HeaderValueNames.HEADER_USER_ID.getName()
-//						+ "," + HeaderValueNames.HEADER_CONTENT_USER.getName());
+
 
         chain.doFilter(req, res);
     }

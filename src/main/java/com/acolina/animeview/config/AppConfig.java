@@ -17,21 +17,22 @@
  */
 package com.acolina.animeview.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ImportResource;
 
 /**
- *
- * @author angel
+ * @author Angel Colina
  */
 @ComponentScan(basePackages = "com.acolina.animeview")
 @SpringBootApplication
 @ImportResource("classpath:quartz-context.xml")
 public class AppConfig {
 
-    public static final String URL = "https://animeflv.net";
+    @Value("${animeview.url.default}")
+    public static String URL="https://animeflv.net";
 
     public static void main(String[] args) {
         SpringApplication.run(AppConfig.class, args);

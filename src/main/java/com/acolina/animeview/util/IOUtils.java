@@ -17,14 +17,14 @@
  */
 package com.acolina.animeview.util;
 
+import org.apache.commons.codec.binary.Base64;
+
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import org.apache.commons.codec.binary.Base64;
 
 /**
- *
- * @author angel
+ * @author Angel Colina
  */
 public class IOUtils {
 

@@ -20,18 +20,12 @@ package com.acolina.animeview.model.entity;
 /**
  * @author Angel Colina
  */
-public class Links extends Entity {
+public class NextEpisode extends Entity {
 
-    private String url;
     private String title;
-    private String text;
+    private String date;
 
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
+    public NextEpisode() {
     }
 
     public String getTitle() {
@@ -42,11 +36,11 @@ public class Links extends Entity {
         this.title = title;
     }
 
-    public String getText() {
-        return text;
+    public String getDate() {
+        return date;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setDate(String date) {
+        this.date = date;
     }
 }

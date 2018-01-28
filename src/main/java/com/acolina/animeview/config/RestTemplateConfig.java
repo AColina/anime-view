@@ -31,8 +31,7 @@ import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.web.client.RestTemplate;
 
 /**
- *
- * @author angel
+ * @author Angel Colina
  */
 @Configuration
 public class RestTemplateConfig {

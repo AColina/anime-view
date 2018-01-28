@@ -17,20 +17,31 @@
  */
 package com.acolina.animeview.model.entity;
 
-import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
- * @author angel
+ * @author Angel Colina
  */
-public class Episode implements Serializable {
+public class Episode extends Entity {
 
+    private Integer idEpisode;
     private String title;
     private String name;
     private String url;
-    private String date;
     private Integer creationDate;
+    private List<Video> videos;
 
     public Episode() {
+    }
+
+    public Integer getIdEpisode() {
+        return idEpisode;
+    }
+
+    public void setIdEpisode(Integer idEpisode) {
+        this.idEpisode = idEpisode;
     }
 
     public String getTitle() {
@@ -57,12 +68,15 @@ public class Episode implements Serializable {
         this.url = url;
     }
 
-    public String getDate() {
-        return date;
+    public List<Video> getVideos() {
+        if (Objects.isNull(videos)) {
+            videos = new ArrayList<>();
+        }
+        return videos;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setVideos(List<Video> videos) {
+        this.videos = videos;
     }
 
     public Integer getCreationDate() {

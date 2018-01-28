@@ -15,38 +15,20 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package com.acolina.animeview.model.entity;
+package com.acolina.animeview.util.mapper.firebase;
+
+
+import com.acolina.animeview.util.mapper.Mapper;
+import com.acolina.animeview.util.reflection.ReflectionUtils;
 
 /**
  * @author Angel Colina
  */
-public class Links extends Entity {
+public class FirebaseMapper extends Mapper {
 
-    private String url;
-    private String title;
-    private String text;
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
+    @Override
+    public <T> T getMapClass(Class enity) {
+        return ReflectionUtils
+                .newInstance(String.format("com.acolina.animeview.migrator.model.firebase.F%s", enity.getSimpleName()));
     }
 }

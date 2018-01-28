@@ -17,6 +17,9 @@
  */
 package com.acolina.animeview.model.dto;
 
+/**
+ * @author Angel Colina
+ */
 public class EpisodeTemp {
 
     private Integer idSerie;

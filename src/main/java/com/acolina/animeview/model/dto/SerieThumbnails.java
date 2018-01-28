@@ -22,8 +22,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
- *
- * @author angel
+ * @author Angel Colina
  */
 @JsonInclude(Include.NON_NULL)
 public class SerieThumbnails {
