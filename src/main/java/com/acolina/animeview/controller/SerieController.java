@@ -39,11 +39,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author angel
@@ -60,10 +56,10 @@ public class SerieController {
 //    @Qualifier("serieService")
     SerieServiceImpl serieService;
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET,value = "/{id}")
     @ApiOperation(value = "Obtiene todos los datos del anime seleccionado")
     public @ResponseBody
-    ResponseEntity<Serie> get(@RequestParam(value = "id", required = true) Integer id) throws Exception {
+    ResponseEntity<Serie> get(@PathVariable(value = "id", required = true) Integer id) throws Exception {
         Serie serie = serieService.findByIdSerie(id);
         return new ResponseEntity<>(serie, HttpStatus.OK);
 
