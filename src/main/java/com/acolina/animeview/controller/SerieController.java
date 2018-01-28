@@ -21,18 +21,22 @@ import com.acolina.animeview.config.AppConfig;
 import com.acolina.animeview.model.dto.SearchSerieThumbnails;
 import com.acolina.animeview.model.dto.SerieThumbnails;
 import com.acolina.animeview.model.entity.Serie;
+import com.acolina.animeview.services.impl.SerieServiceImpl;
 import com.acolina.animeview.util.jsoup.AnimeFlvDecoder;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,7 +46,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- *
  * @author angel
  */
 @RestController
@@ -53,17 +56,17 @@ public class SerieController {
     @Autowired
     AnimeFlvDecoder animeFlvDecoder;
 
+    @Autowired
+//    @Qualifier("serieService")
+    SerieServiceImpl serieService;
+
     @RequestMapping(method = RequestMethod.GET)
     @ApiOperation(value = "Obtiene todos los datos del anime seleccionado")
     public @ResponseBody
-    ResponseEntity<Serie> get(@RequestParam(value = "id", required = true) String url) throws Exception {
+    ResponseEntity<Serie> get(@RequestParam(value = "id", required = true) Integer id) throws Exception {
+        Serie serie = serieService.findByIdSerie(id);
+        return new ResponseEntity<>(serie, HttpStatus.OK);
 
-        try {
-            return new ResponseEntity<>(animeFlvDecoder.decodeSerie(url), HttpStatus.OK);
-        } catch (Exception ex) {
-            Logger.getLogger(SerieController.class.getName()).log(Level.SEVERE, null, ex);
-            throw ex;
-        }
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/emission")
@@ -97,11 +100,11 @@ public class SerieController {
     @ApiOperation(value = "Obtiene una lista de series cargados recientemente")
     public @ResponseBody
     ResponseEntity<SearchSerieThumbnails> search(@RequestParam(value = "genders", required = false) String[] genders,
-            @RequestParam(value = "year", required = false) Integer[] year,
-            @RequestParam(value = "type", required = false) String[] type,
-            @RequestParam(value = "state", required = false) Integer[] state,
-            @RequestParam(value = "order", required = false, defaultValue = "default") String order,
-            @RequestParam(value = "page", required = false) Integer page
+                                                 @RequestParam(value = "year", required = false) Integer[] year,
+                                                 @RequestParam(value = "type", required = false) String[] type,
+                                                 @RequestParam(value = "state", required = false) Integer[] state,
+                                                 @RequestParam(value = "order", required = false, defaultValue = "default") String order,
+                                                 @RequestParam(value = "page", required = false) Integer page
     ) throws Exception {
         try {
             Map<String, Object> params = new HashMap<>();

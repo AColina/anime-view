@@ -18,6 +18,10 @@
 package com.acolina.animeview.model.entity;
 
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -26,8 +30,12 @@ import java.util.Objects;
 /**
  * @author Angel Colina
  */
+@Document(collection = "animeflv")
 public class Serie extends Entity {
 
+    @Id
+    public String _id;
+    @Indexed(unique = true)
     private Integer idSerie;
     private String url;
     private String title;
@@ -42,6 +50,14 @@ public class Serie extends Entity {
     private NextEpisode nextEpisode;
     private List<Episode> episodes;
     private Integer year;
+
+    public String get_id() {
+        return _id;
+    }
+
+    public void set_id(String _id) {
+        this._id = _id;
+    }
 
     public Integer getIdSerie() {
         return idSerie;

@@ -22,17 +22,19 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ImportResource;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 /**
  * @author Angel Colina
  */
 @ComponentScan(basePackages = "com.acolina.animeview")
 @SpringBootApplication
-@ImportResource("classpath:quartz-context.xml")
+@ImportResource({"classpath:quartz-context.xml"})
+@EnableMongoRepositories(basePackages = "com.acolina.animeview.repository")
 public class AppConfig {
 
     @Value("${animeview.url.default}")
-    public static String URL="https://animeflv.net";
+    public static String URL;
 
     public static void main(String[] args) {
         SpringApplication.run(AppConfig.class, args);
