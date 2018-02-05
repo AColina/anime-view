@@ -62,7 +62,7 @@ public class EpisodiosController {
 
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/recent")
+//    @RequestMapping(method = RequestMethod.GET, value = "/recent")
     @ApiOperation(value = "Obtiene una lista de episodios cargados recientemente")
     public @ResponseBody
     ResponseEntity<List<EpisodioThumbnails>> recent() throws Exception {

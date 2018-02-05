@@ -18,6 +18,7 @@
 package com.acolina.animeview.model.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -48,6 +49,7 @@ public class Serie extends Entity {
     private String backgroundImage;
     private String rating;
     private NextEpisode nextEpisode;
+    @JsonIgnore
     private List<Episode> episodes;
     private Integer year;
 
