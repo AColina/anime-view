@@ -21,6 +21,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ImportResource;
+import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 //import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 /**
@@ -30,6 +31,7 @@ import org.springframework.context.annotation.ImportResource;
 @SpringBootApplication
 @ImportResource({"classpath:quartz-context.xml"})
 //@EnableMongoRepositories(basePackages = "com.acolina.animeview.repository")
+@EnableRedisRepositories(basePackages = "com.acolina.animeview.repository")
 public class AppConfig {
 
     public static void main(String[] args) {

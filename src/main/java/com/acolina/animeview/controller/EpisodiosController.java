@@ -17,40 +17,43 @@
  */
 package com.acolina.animeview.controller;
 
-import com.acolina.animeview.config.AppConfig;
 import com.acolina.animeview.model.dto.EpisodioThumbnails;
+import com.acolina.animeview.model.redis.REpisode;
+import com.acolina.animeview.services.EpisodeService;
 import com.acolina.animeview.util.jsoup.AnimeFlvDecoder;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- *
  * @author angel
  */
 
+@RestController
 @RequestMapping("/episode")
 @Api(value = "episode", description = "Controlador rest para los episodios")
 public class EpisodiosController {
+
     @Value("${animeview.url.default}")
-    public  String URL;
+    public String URL;
+
     @Autowired
     AnimeFlvDecoder animeFlvDecoder;
 
-//    @RequestMapping(method = RequestMethod.GET)
+    @Autowired
+    EpisodeService service;
+
+    //    @RequestMapping(method = RequestMethod.GET)
     public @ResponseBody
     ResponseEntity<List<EpisodioThumbnails>> getEpisodio(@RequestParam(required = true, value = "url") String Url) throws Exception {
 
@@ -64,18 +67,24 @@ public class EpisodiosController {
 
     }
 
-//    @RequestMapping(method = RequestMethod.GET, value = "/recent")
+    @RequestMapping(method = RequestMethod.GET, value = "/recent")
     @ApiOperation(value = "Obtiene una lista de episodios cargados recientemente")
     public @ResponseBody
-    ResponseEntity<List<EpisodioThumbnails>> recent() throws Exception {
+    ResponseEntity<List<REpisode>> recent() throws Exception {
 
-        try {
-            Document doc = Jsoup.connect(URL).get();
-            return new ResponseEntity<>(animeFlvDecoder.decodeEpisodiosThumbnails(doc, "main .ListEpisodios li", false), HttpStatus.OK);
-        } catch (Exception ex) {
-            Logger.getLogger(EpisodiosController.class.getName()).log(Level.SEVERE, null, ex);
-            throw ex;
-        }
+        List<REpisode> list = service.findEpisodeRecent();
+
+        return new ResponseEntity<>(list, HttpStatus.OK);
+
+    }
+    @RequestMapping(method = RequestMethod.GET, value = "/")
+    @ApiOperation(value = "Obtiene una lista de episodios cargados recientemente")
+    public @ResponseBody
+    ResponseEntity<Iterable<REpisode>> getAll() throws Exception {
+
+        Iterable<REpisode> list = service.findAll();
+
+        return new ResponseEntity<>(list, HttpStatus.OK);
 
     }
 

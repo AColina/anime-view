@@ -15,27 +15,16 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package com.acolina.animeview.repository;
+package com.acolina.animeview.services;
 
-//import com.acolina.animeview.model.entity.Serie;
-//import org.springframework.data.mongodb.repository.MongoRepository;
-//import org.springframework.stereotype.Repository;
-//import org.springframework.transaction.annotation.Transactional;
+import com.acolina.animeview.model.redis.REpisode;
 
-//@Repository
-//@Transactional
-//public interface ISerieRepository extends MongoRepository<Serie, String> {
-//
-//    /**
-//     * @param url
-//     * @return
-//     */
-//    Serie findByUrl(String url);
-//
-//    /**
-//     * @param idSerie
-//     * @return
-//     */
-//    Serie findByIdSerie(Integer idSerie);
-//
-//}
+import java.util.List;
+
+public interface EpisodeService {
+
+    Iterable<REpisode> findAll();
+    List<REpisode> findByCreationDateLessThan(Long creationDate);
+
+    List<REpisode> findEpisodeRecent();
+}

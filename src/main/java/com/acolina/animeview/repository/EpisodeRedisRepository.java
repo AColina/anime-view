@@ -15,24 +15,17 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package com.acolina.animeview.services.impl;
+package com.acolina.animeview.repository;
 
-//import com.acolina.animeview.model.entity.Serie;
-//import com.acolina.animeview.repository.ISerieRepository;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.stereotype.Component;
-//
-//@Component
-//public class SerieServiceImpl {
-//
-//    @Autowired
-//    ISerieRepository repository;
-//
-//    public Serie findByIdSerie(Integer id) {
-//        return repository.findByIdSerie(id);
-//    }
-//
-//    public Serie updateSerie(Serie serie) {
-//        return repository.save(serie);
-//    }
-//}
+import com.acolina.animeview.model.redis.REpisode;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+@Repository
+@Transactional
+public interface EpisodeRedisRepository extends CrudRepository<REpisode, String> {
+
+
+}
+

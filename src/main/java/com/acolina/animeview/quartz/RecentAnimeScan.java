@@ -23,6 +23,8 @@ import com.acolina.animeview.model.dto.EpisodioThumbnails;
 import com.acolina.animeview.model.entity.Episode;
 import com.acolina.animeview.model.entity.Serie;
 import com.acolina.animeview.model.firebase.FSerie;
+import com.acolina.animeview.model.redis.REpisode;
+import com.acolina.animeview.repository.EpisodeRedisRepository;
 import com.acolina.animeview.services.EmailService;
 import com.acolina.animeview.util.jsoup.AnimeFlvDecoder;
 import com.acolina.animeview.util.mapper.algolia.AlgoliaMapper;
@@ -76,6 +78,9 @@ public class RecentAnimeScan {
 
     @Autowired
     EmailService emailService;
+
+    @Autowired
+    EpisodeRedisRepository repository;
 
     public void scan() {
 //        System.out.println("scan");
@@ -138,12 +143,15 @@ public class RecentAnimeScan {
     private void saveEpisode(String url) throws Exception {
         Episode e = animeFlvDecoder.decodeEpisode(url);
         e.setCreationDate(getCurrentTime());
+        REpisode redisEpisode= new REpisode(e);
+        repository.save(redisEpisode);
         firestore
                 .collection(collection)
                 .document(e.getIdSerie().toString())
                 .collection(episodeCollection)
                 .document(e.get_id().toString())
                 .set(e);
+
         LOGGER.info(String.format("save anime %d-%s", e.get_id(), e.getTitle()));
     }
 
