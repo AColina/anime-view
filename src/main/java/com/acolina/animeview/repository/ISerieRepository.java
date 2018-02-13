@@ -17,25 +17,25 @@
  */
 package com.acolina.animeview.repository;
 
-import com.acolina.animeview.model.entity.Serie;
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
+//import com.acolina.animeview.model.entity.Serie;
+//import org.springframework.data.mongodb.repository.MongoRepository;
+//import org.springframework.stereotype.Repository;
+//import org.springframework.transaction.annotation.Transactional;
 
-@Repository
-@Transactional
-public interface ISerieRepository extends MongoRepository<Serie, String> {
-
-    /**
-     * @param url
-     * @return
-     */
-    Serie findByUrl(String url);
-
-    /**
-     * @param idSerie
-     * @return
-     */
-    Serie findByIdSerie(Integer idSerie);
-
-}
+//@Repository
+//@Transactional
+//public interface ISerieRepository extends MongoRepository<Serie, String> {
+//
+//    /**
+//     * @param url
+//     * @return
+//     */
+//    Serie findByUrl(String url);
+//
+//    /**
+//     * @param idSerie
+//     * @return
+//     */
+//    Serie findByIdSerie(Integer idSerie);
+//
+//}

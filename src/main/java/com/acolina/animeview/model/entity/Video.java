@@ -17,7 +17,7 @@
  */
 package com.acolina.animeview.model.entity;
 
-public class Video extends Entity {
+public class Video implements IEntity {
 
     private String urlVideo;
     private String server;

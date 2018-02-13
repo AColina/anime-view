@@ -17,15 +17,15 @@
  */
 package com.acolina.animeview.model.algolia;
 
-import java.io.Serializable;
+import com.acolina.animeview.model.entity.Entity;
+
 import java.util.List;
 
 /**
  * @author Angel Colina
  */
-public class ASerie implements Serializable {
+public class ASerie extends Entity {
 
-    private Integer idSerie;
     private String url;
     private String title;
     private String urlFront;
@@ -35,14 +35,6 @@ public class ASerie implements Serializable {
     private String type;
     private String rating;
     private Integer year;
-
-    public Integer getIdSerie() {
-        return idSerie;
-    }
-
-    public void setIdSerie(Integer idSerie) {
-        this.idSerie = idSerie;
-    }
 
     public String getUrl() {
         return url;

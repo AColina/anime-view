@@ -18,10 +18,11 @@
 package com.acolina.animeview.util.mapper;
 
 
-import com.acolina.animeview.model.entity.Entity;
+import com.acolina.animeview.model.entity.IEntity;
 import com.acolina.animeview.util.reflection.ReflectionUtils;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -33,7 +34,7 @@ public abstract class Mapper {
 
     public abstract <T> T getMapClass(Class enity);
 
-    public <T> T map(Entity enity) {
+    public <T> T map(IEntity enity) {
 
         Object instance = getMapClass(enity.getClass());
 
@@ -41,19 +42,21 @@ public abstract class Mapper {
             Field[] fields = ReflectionUtils.getFields(instance);
             for (Field field : fields) {
                 Object value = ReflectionUtils.runGetter(field, enity);
+
                 if (Objects.nonNull(value) && (value instanceof List)) {
-                    List valueList = new ArrayList();
-                    if (((List) value).size() > 0 && !((List) value).get(0).getClass().isAssignableFrom(Entity.class)) {
+
+                    Class<?> c = (Class<?>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+                    if (!c.isAssignableFrom(IEntity.class)) {
                         ReflectionUtils.runSetterWithCast(field, instance, value);
                         continue;
                     }
+                    List valueList = new ArrayList();
+
                     ((List) value)
                             .stream()
-                            .map(e -> map((Entity) e))
+                            .map(e -> map((IEntity) e))
                             .filter(e -> Objects.nonNull(e))
-                            .forEach(e -> {
-                                valueList.add(e);
-                            });
+                            .forEach(e -> valueList.add(e));
                     ReflectionUtils.runSetterWithCast(field, instance, valueList);
                 } else {
                     ReflectionUtils.runSetterWithCast(field, instance, value);

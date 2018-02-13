@@ -18,33 +18,31 @@
 package com.acolina.animeview.controller;
 
 import com.acolina.animeview.config.AppConfig;
-import com.acolina.animeview.model.dto.SearchSerieThumbnails;
 import com.acolina.animeview.model.dto.SerieThumbnails;
 import com.acolina.animeview.model.entity.Serie;
-import com.acolina.animeview.services.impl.SerieServiceImpl;
 import com.acolina.animeview.util.jsoup.AnimeFlvDecoder;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+//import com.acolina.animeview.services.impl.SerieServiceImpl;
 
 
 /**
  * @author angel
  */
-@RestController
+
 @RequestMapping("/serie")
 @Api(value = "serie", description = "Controlador rest para los serie")
 public class SerieController {
@@ -52,18 +50,20 @@ public class SerieController {
     @Autowired
     AnimeFlvDecoder animeFlvDecoder;
 
-    @Autowired
-    SerieServiceImpl serieService;
+    @Value("${animeview.url.default}")
+    public  String URL;
+//    @Autowired
+//    SerieServiceImpl serieService;
 
-    @RequestMapping(method = RequestMethod.GET,value = "/{id}")
-    @ApiOperation(value = "Obtiene todos los datos del anime seleccionado")
+//    @RequestMapping(method = RequestMethod.GET,value = "/{id}")
+//    @ApiOperation(value = "Obtiene todos los datos del anime seleccionado")
 //    @Cacheable(value = "serie", key = "#id", unless = "#result == null")
-    public @ResponseBody
-    ResponseEntity<Serie> get(@PathVariable(value = "id", required = true) Integer id) throws Exception {
-        Serie serie = serieService.findByIdSerie(id);
-        return new ResponseEntity<>(serie, HttpStatus.OK);
+//    public @ResponseBody
+//    ResponseEntity<Serie> get(@PathVariable(value = "id", required = true) Integer id) throws Exception {
+//        Serie serie = serieService.findByIdSerie(id);
+//        return new ResponseEntity<>(serie, HttpStatus.OK);
 
-    }
+//    }
 
 //    @RequestMapping(method = RequestMethod.GET, value = "/emission")
     @ApiOperation(value = "Obtiene una lista de series en emision")
@@ -83,7 +83,7 @@ public class SerieController {
     ResponseEntity<List<SerieThumbnails>> recent() throws Exception {
 
         try {
-            Document doc = Jsoup.connect(AppConfig.URL).get();
+            Document doc = Jsoup.connect(URL).get();
             return new ResponseEntity<>(animeFlvDecoder.decodeSeriesThumbnails(doc, "main .ListAnimes li"), HttpStatus.OK);
         } catch (Exception ex) {
             Logger.getLogger(SerieController.class.getName()).log(Level.SEVERE, null, ex);

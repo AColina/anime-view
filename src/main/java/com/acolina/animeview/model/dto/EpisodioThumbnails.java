@@ -24,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 public class EpisodioThumbnails {
 
+    private Integer _id;
     private String url;
     private String urlImg;
     private String episode;
@@ -32,6 +33,14 @@ public class EpisodioThumbnails {
     private String base64;
 
     public EpisodioThumbnails() {
+    }
+
+    public Integer get_id() {
+        return _id;
+    }
+
+    public void set_id(Integer _id) {
+        this._id = _id;
     }
 
     public String getUrl() {

@@ -24,9 +24,9 @@ import java.util.Objects;
 /**
  * @author Angel Colina
  */
-public class Episode extends Entity {
+public class Episode extends Entity implements IEntity {
 
-    private Integer idEpisode;
+    private Integer idSerie;
     private String title;
     private String name;
     private String url;
@@ -36,12 +36,12 @@ public class Episode extends Entity {
     public Episode() {
     }
 
-    public Integer getIdEpisode() {
-        return idEpisode;
+    public Integer getIdSerie() {
+        return idSerie;
     }
 
-    public void setIdEpisode(Integer idEpisode) {
-        this.idEpisode = idEpisode;
+    public void setIdSerie(Integer idSerie) {
+        this.idSerie = idSerie;
     }
 
     public String getTitle() {

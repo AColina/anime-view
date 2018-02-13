@@ -34,6 +34,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -47,6 +48,10 @@ public class AnimeFlvDecoder {
 
     @Autowired
     private RestTemplate rt;
+
+    @Value("${animeview.url.default}")
+    public  String URL;
+
     private Pattern idPattern = Pattern.compile("\\/\\d+\\/");
 
     private Integer getId(String url) {
@@ -79,6 +84,7 @@ public class AnimeFlvDecoder {
         );
         e.setEpisode(aTag.select(".Capi").get(0).text());
         e.setTitle(aTag.select(".Title").get(0).text());
+        e.set_id(getId(e.getUrl()));
 
         return e;
     }
@@ -109,7 +115,7 @@ public class AnimeFlvDecoder {
 
     public List<Serie> emissionSeriesThumbnails() throws Exception {
         List<Serie> eps = new ArrayList<>();
-        Document doc = Jsoup.connect(AppConfig.URL).get();
+        Document doc = Jsoup.connect(URL).get();
         for (Element el : doc.select(".Sidebar .Emision ul.ListSdbr li")) {
             Element aTag = el.child(0);
             Serie e = decodeSerie(aTag.attr("href"));
@@ -121,15 +127,11 @@ public class AnimeFlvDecoder {
 
     public Serie decodeSerie(String url) throws Exception {
 
-        Document doc = Jsoup.connect(AppConfig.URL.concat(url)).get();
+        Document doc = Jsoup.connect(URL.concat(url)).get();
         Serie s = new Serie();
         s.setUrl(url);
+        s.set_id(getId(url));
 
-
-        Matcher matcher = idPattern.matcher(url);
-        matcher.find();
-        String id = matcher.group();
-        s.setIdSerie(Integer.parseInt(id.substring(1, id.length() - 1)));
         Element side = doc.select(".Body div.Container aside").first();
 
         s.setUrlFront(side.select(".AnimeCover img").first().attr("src"));
@@ -160,19 +162,30 @@ public class AnimeFlvDecoder {
                 epe.setDate(atag.select(".Date").first().text());
                 s.setNextEpisode(epe);
             } else {
-                Episode epe = new Episode();
-                epe.setTitle(title);
-                epe.setName(atag.select("p").first().text());
-                epe.setUrl(atag.attr("href"));
-                s.getEpisodes().add(epe);
+                try {
+                    Episode epe = new Episode();
+                    epe.setUrl(atag.attr("href"));
+//                Episode epe = decodeEpisode(atag.attr("href"));
+                    epe.setTitle(title);
+                    epe.setName(atag.select("p").first().text());
+                    s.getEpisodes().add(epe);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
             }
         });
 
         main.select(".WdgtCn .ListEpisodes li a").forEach((Element atag) -> {
-            Episode epe = new Episode();
-            epe.setTitle(atag.text());
-            epe.setUrl(atag.attr("href"));
-            s.getEpisodes().add(epe);
+            Episode epe = null;
+            try {
+                epe = new Episode();
+                epe.setUrl(atag.attr("href"));
+//                epe = decodeEpisode(atag.attr("href"));
+                epe.setTitle(atag.text());
+                s.getEpisodes().add(epe);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
         });
 
@@ -180,8 +193,10 @@ public class AnimeFlvDecoder {
             Links li = new Links();
 
             li.setTitle(liTag.select("a").first().text());
+
             li.setText(liTag.text());
             li.setUrl(liTag.select("a").first().attr("href"));
+            li.set_id(getId(li.getUrl()));
             s.getLinks().add(li);
         });
         return s;
@@ -189,7 +204,7 @@ public class AnimeFlvDecoder {
 
     public EpisodeTemp decodeEpisodeTemp(String url) throws Exception {
 
-        Document doc = Jsoup.connect(AppConfig.URL.concat(url)).get();
+        Document doc = Jsoup.connect(URL.concat(url)).get();
         EpisodeTemp ep = new EpisodeTemp();
         Element container = doc.select(".Body div.Container .CpCn").first();
 
@@ -202,14 +217,21 @@ public class AnimeFlvDecoder {
 
     public Episode decodeEpisode(String url) throws Exception {
 
-        Document doc = Jsoup.connect(AppConfig.URL.concat(url)).get();
+        Document doc = Jsoup.connect(URL.concat(url)).get();
         Episode ep = new Episode();
         Element container = doc.select(".Body div.Container .CpCn").first();
+        ep.setUrl(url);
+        ep.set_id(getId(url));
 
         Elements eles = doc.select("script");
         String script = eles.get(eles.size() - 3).html();
         ep.setName(container.select(".CpCnA .CapiTop .SubTitle").text());
         Elements servers = container.select(".CpCnA .CapiTnv li");
+
+        Element capOptions = container.select(".CpCnB .CapOptns").first();
+        String urlSerie = capOptions.select(".CapNv").first().getAllElements().last().attr("href");
+        ep.setIdSerie(getId(urlSerie));
+
         servers.forEach(li -> {
             Video video = new Video();
             video.setServer(li.attr("title"));
@@ -230,7 +252,7 @@ public class AnimeFlvDecoder {
 
     public SearchSerieThumbnails decodeSerieSearch(Map<String, Object> urlParam) throws Exception {
         SearchSerieThumbnails seah = new SearchSerieThumbnails();
-        StringBuilder url = new StringBuilder(AppConfig.URL.concat("/browse?"));
+        StringBuilder url = new StringBuilder(URL.concat("/browse?"));
         for (String key : urlParam.keySet()) {
 
             Object value = urlParam.get(key);

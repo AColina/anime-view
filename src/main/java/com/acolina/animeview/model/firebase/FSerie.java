@@ -17,28 +17,30 @@
  */
 package com.acolina.animeview.model.firebase;
 
+import com.acolina.animeview.model.entity.Entity;
+import com.acolina.animeview.model.entity.Links;
+import com.acolina.animeview.model.entity.NextEpisode;
+
 import java.io.Serializable;
 import java.util.List;
 
 /**
  * @author Angel Colina
  */
-public class FSerie implements Serializable {
+public class FSerie extends Entity {
 
-    private Integer idSerie;
     private String url;
     private String title;
+    private String urlFront;
+    private String synopsis;
+    private List<String> genders;
+    private List<Links> links;
     private String state;
     private String type;
-    private List<FEpisode> episodes;
-
-    public Integer getIdSerie() {
-        return idSerie;
-    }
-
-    public void setIdSerie(Integer idSerie) {
-        this.idSerie = idSerie;
-    }
+    private String backgroundImage;
+    private String rating;
+    private NextEpisode nextEpisode;
+    private Integer year;
 
     public String getUrl() {
         return url;
@@ -54,6 +56,38 @@ public class FSerie implements Serializable {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getUrlFront() {
+        return urlFront;
+    }
+
+    public void setUrlFront(String urlFront) {
+        this.urlFront = urlFront;
+    }
+
+    public String getSynopsis() {
+        return synopsis;
+    }
+
+    public void setSynopsis(String synopsis) {
+        this.synopsis = synopsis;
+    }
+
+    public List<String> getGenders() {
+        return genders;
+    }
+
+    public void setGenders(List<String> genders) {
+        this.genders = genders;
+    }
+
+    public List<Links> getLinks() {
+        return links;
+    }
+
+    public void setLinks(List<Links> links) {
+        this.links = links;
     }
 
     public String getState() {
@@ -72,11 +106,35 @@ public class FSerie implements Serializable {
         this.type = type;
     }
 
-    public List<FEpisode> getEpisodes() {
-        return episodes;
+    public String getBackgroundImage() {
+        return backgroundImage;
     }
 
-    public void setEpisodes(List<FEpisode> episodes) {
-        this.episodes = episodes;
+    public void setBackgroundImage(String backgroundImage) {
+        this.backgroundImage = backgroundImage;
+    }
+
+    public String getRating() {
+        return rating;
+    }
+
+    public void setRating(String rating) {
+        this.rating = rating;
+    }
+
+    public NextEpisode getNextEpisode() {
+        return nextEpisode;
+    }
+
+    public void setNextEpisode(NextEpisode nextEpisode) {
+        this.nextEpisode = nextEpisode;
+    }
+
+    public Integer getYear() {
+        return year;
+    }
+
+    public void setYear(Integer year) {
+        this.year = year;
     }
 }

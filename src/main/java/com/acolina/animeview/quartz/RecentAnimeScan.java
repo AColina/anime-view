@@ -17,18 +17,20 @@
  */
 package com.acolina.animeview.quartz;
 
-import com.acolina.animeview.config.AppConfig;
+import com.acolina.animeview.model.algolia.ASerie;
 import com.acolina.animeview.model.dto.EpisodeTemp;
 import com.acolina.animeview.model.dto.EpisodioThumbnails;
 import com.acolina.animeview.model.entity.Episode;
 import com.acolina.animeview.model.entity.Serie;
+import com.acolina.animeview.model.firebase.FSerie;
+import com.acolina.animeview.services.EmailService;
 import com.acolina.animeview.util.jsoup.AnimeFlvDecoder;
+import com.acolina.animeview.util.mapper.algolia.AlgoliaMapper;
 import com.algolia.search.APIClient;
 import com.algolia.search.Index;
 import com.algolia.search.exceptions.AlgoliaException;
-import com.algolia.search.objects.Query;
-import com.algolia.search.responses.SearchResult;
-import com.google.cloud.firestore.DocumentReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -36,15 +38,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Angel Colina
  */
 @Component("recentAnimeScan")
 public class RecentAnimeScan {
+
+    private static final Logger LOGGER = Logger.getLogger(RecentAnimeScan.class.getName());
 
     private static EpisodioThumbnails recent;
 
@@ -57,60 +65,106 @@ public class RecentAnimeScan {
     @Autowired
     APIClient client;
 
-    @Value("${animeFlv}")
+    @Value("${collection.serie}")
     String collection;
+
+    @Value("${collection.episodes}")
+    String episodeCollection;
+
+    @Value("${animeview.url.default}")
+    public String URL;
+
+    @Autowired
+    EmailService emailService;
 
     public void scan() {
         System.out.println("scan");
         try {
-            Document doc = Jsoup.connect(AppConfig.URL).get();
-            List<EpisodioThumbnails> eps = animeFlvDecoder.decodeEpisodiosThumbnails(doc, "main .ListEpisodios li", false);
+
+            List<EpisodioThumbnails> eps = animeFlvDecoder
+                    .decodeEpisodiosThumbnails(getDocument(), "main .ListEpisodios li", false);
 
             if (!eps.isEmpty() && isLast(eps.get(0))) {
-                System.out.println("isLast");
                 return;
             }
 
-            Index<Serie> index = client.initIndex(collection, Serie.class);
-
-            upgrateSerieInToRepositorys(eps, index);
+            upgrateSerieInToRepositorys(eps);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
-    private void upgrateSerieInToRepositorys(List<EpisodioThumbnails> eps, Index<Serie> index) throws Exception {
+    private void upgrateSerieInToRepositorys(List<EpisodioThumbnails> eps) throws Exception {
+        Index<ASerie> index = client.initIndex(collection, ASerie.class);
         for (EpisodioThumbnails ep : eps) {
 
-            if (validateWithAlgolia(index, ep.getUrl())) {
-                EpisodeTemp temp = animeFlvDecoder.decodeEpisodeTemp(ep.getUrl());
-//                    SearchResult<Serie> serie = index.search(q);
-                DocumentReference docRef = firestore.collection(collection).document(temp.getIdSerie().toString());
-                Serie serie = animeFlvDecoder.decodeSerie(temp.getUrlSerie());
+            EpisodeTemp episode = animeFlvDecoder.decodeEpisodeTemp(ep.getUrl());
 
-                setCreationDateToRecenEpisode(serie, ep.getUrl());
 
-                docRef.set(serie);
-                index.saveObject(serie.getIdSerie().toString(), serie).waitForCompletion();
-                System.out.println("Serie save : " + serie.getUrl());
+            DocumentSnapshot ds = firestore.collection(collection)
+                    .document(episode.getIdSerie().toString())
+                    .get()
+                    .get();
+
+            if (!ds.exists()) {
+
+                Serie serie = saveSerie(episode.getUrlSerie());
+                algoliaSave(index, serie);
+            } else if (!validateExists(episode.getIdSerie(), ep.get_id())) {
+                saveEpisode(ep.getUrl());
+            } else {
+                LOGGER.info("no hay animes que guardar");
             }
         }
+
     }
 
-    private void setCreationDateToRecenEpisode(Serie serie, String url) {
-
-        Episode episode = serie.getEpisodes()
-                .stream()
-                .filter(f -> f.getUrl().equals(url))
-                .findFirst().get();
-
-        episode.setCreationDate((int) (new Date().getTime() / 1000));
+    private Serie saveSerie(String url) throws Exception {
+        Serie serie = animeFlvDecoder.decodeSerie(url);
+        Calendar c = Calendar.getInstance();
+        serie.setYear(c.get(Calendar.YEAR));
+        ObjectMapper mapper = new ObjectMapper();
+        FSerie fs = mapper.readValue(mapper.writeValueAsBytes(serie), FSerie.class);
+        firestore
+                .collection(collection)
+                .document(serie.get_id().toString())
+                .set(fs);
+        for (Episode e : serie.getEpisodes()) {
+            saveEpisode(e.getUrl());
+        }
+        return serie;
     }
 
-    private boolean validateWithAlgolia(Index<Serie> index, String url) throws AlgoliaException {
-        Query q = new Query(url);
-        SearchResult<Serie> lst = index.search(q);
-        return lst.getHits().size() == 0;
+    private void saveEpisode(String url) throws Exception {
+        Episode e = animeFlvDecoder.decodeEpisode(url);
+        e.setCreationDate(getCurrentTime());
+        firestore
+                .collection(collection)
+                .document(e.getIdSerie().toString())
+                .collection(episodeCollection)
+                .document(e.get_id().toString())
+                .set(e);
+        LOGGER.info(String.format("save anime %d-%s", e.get_id(), e.getTitle()));
+    }
+
+    private int getCurrentTime() {
+        return (int) (new Date().getTime() / 1000);
+    }
+
+    private void algoliaSave(Index<ASerie> index, Serie serie) throws AlgoliaException {
+        AlgoliaMapper mapper = new AlgoliaMapper();
+        ASerie algoliaValue = mapper.map(serie);
+        index.saveObject(serie.get_id().toString(), algoliaValue).waitForCompletion();
+    }
+
+    private boolean validateExists(Integer idSerie, Integer idEpisode) throws Exception {
+        DocumentSnapshot ds = firestore.collection(collection)
+                .document(idSerie.toString())
+                .collection(episodeCollection)
+                .document(idEpisode.toString())
+                .get()
+                .get();
+        return ds.exists();
     }
 
     private boolean isLast(EpisodioThumbnails episodioThumbnails) {
@@ -123,46 +177,15 @@ public class RecentAnimeScan {
 
     }
 
-    //
-    public static void main(String[] args) throws Exception {
-//        FirebaseConfig c = new FirebaseConfig();
-        AnimeFlvDecoder animeFlvDecoder = new AnimeFlvDecoder();
-        Episode e=animeFlvDecoder.decodeEpisode("/ver/48003/miira-no-kaikata-1");
-        System.out.println(e);
-//        try {
-//            c.init();
-//            CollectionReference cr = c.firebaseDatabse().collection("series");
-//            List<DocumentSnapshot> ds = cr.get().get().getDocuments();
-//
-//            ds.stream()
-//                    .map(e -> e.toObject(Serie.class))
-//                    .filter(s -> s.getEpisodes().size() == 0 && !s.getState().equalsIgnoreCase("PROXIMAMENTE"))
-////                    .map(s -> s.getUrl())
-//                    .forEach((s) -> {
-//                        try {
-////                            Serie s = animeFlvDecoder.decodeSerie(url);
-//                            System.out.println("tosave : " + s.getUrl());
-//                            System.out.println("episodes : " + s.getEpisodes().size());
-//                            APIClient client = new ApacheAPIClientBuilder("BX5J5YSPTR", "8102ee35d4b9098ad3e8fe8d186e89c8").build();
-//                            Index<Serie> index = client.initIndex("series", Serie.class);
-//                            DocumentReference docRef = c.firebaseDatabse().collection("series").document(s.getId().toString());
-//                            ApiFuture<WriteResult> result = docRef.update("episodes", s.getEpisodes());
-//                            ApiFuture<WriteResult> result = docRef.set(s);
-//                            index.saveObject(s.getId().toString(), s).waitForCompletion();
-//                            System.out.println(s.getTitle() + " Update time : " + result.get().getUpdateTime());
-
-//                        } catch (Exception ex) {
-//                            ex.printStackTrace();
-//                        }
-//                    });
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        } catch (ExecutionException e) {
-//            e.printStackTrace();
-//        }
+    private Document getDocument() {
+        try {
+            return Jsoup.connect(URL).get();
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "", e);
+            emailService.sendErrorMail(e);
+            System.exit(1);
+        }
+        throw new RuntimeException("");
     }
 
 }

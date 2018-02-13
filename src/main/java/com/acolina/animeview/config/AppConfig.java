@@ -17,12 +17,11 @@
  */
 package com.acolina.animeview.config;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ImportResource;
-import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
+//import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 /**
  * @author Angel Colina
@@ -30,11 +29,8 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @ComponentScan(basePackages = "com.acolina.animeview")
 @SpringBootApplication
 @ImportResource({"classpath:quartz-context.xml"})
-@EnableMongoRepositories(basePackages = "com.acolina.animeview.repository")
+//@EnableMongoRepositories(basePackages = "com.acolina.animeview.repository")
 public class AppConfig {
-
-    @Value("${animeview.url.default}")
-    public static String URL;
 
     public static void main(String[] args) {
         SpringApplication.run(AppConfig.class, args);

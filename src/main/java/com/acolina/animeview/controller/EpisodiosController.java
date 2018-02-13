@@ -28,6 +28,7 @@ import java.util.logging.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,11 +41,12 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author angel
  */
-@RestController
+
 @RequestMapping("/episode")
 @Api(value = "episode", description = "Controlador rest para los episodios")
 public class EpisodiosController {
-
+    @Value("${animeview.url.default}")
+    public  String URL;
     @Autowired
     AnimeFlvDecoder animeFlvDecoder;
 
@@ -53,7 +55,7 @@ public class EpisodiosController {
     ResponseEntity<List<EpisodioThumbnails>> getEpisodio(@RequestParam(required = true, value = "url") String Url) throws Exception {
 
         try {
-            Document doc = Jsoup.connect(AppConfig.URL).get();
+            Document doc = Jsoup.connect(URL).get();
             return new ResponseEntity<>(animeFlvDecoder.decodeEpisodiosThumbnails(doc, "main .ListEpisodios li"), HttpStatus.OK);
         } catch (Exception ex) {
             Logger.getLogger(EpisodiosController.class.getName()).log(Level.SEVERE, null, ex);
@@ -68,7 +70,7 @@ public class EpisodiosController {
     ResponseEntity<List<EpisodioThumbnails>> recent() throws Exception {
 
         try {
-            Document doc = Jsoup.connect(AppConfig.URL).get();
+            Document doc = Jsoup.connect(URL).get();
             return new ResponseEntity<>(animeFlvDecoder.decodeEpisodiosThumbnails(doc, "main .ListEpisodios li", false), HttpStatus.OK);
         } catch (Exception ex) {
             Logger.getLogger(EpisodiosController.class.getName()).log(Level.SEVERE, null, ex);

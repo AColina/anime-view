@@ -17,22 +17,22 @@
  */
 package com.acolina.animeview.services.impl;
 
-import com.acolina.animeview.model.entity.Serie;
-import com.acolina.animeview.repository.ISerieRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-@Component
-public class SerieServiceImpl {
-
-    @Autowired
-    ISerieRepository repository;
-
-    public Serie findByIdSerie(Integer id) {
-        return repository.findByIdSerie(id);
-    }
-
-    public Serie updateSerie(Serie serie) {
-        return repository.save(serie);
-    }
-}
+//import com.acolina.animeview.model.entity.Serie;
+//import com.acolina.animeview.repository.ISerieRepository;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.stereotype.Component;
+//
+//@Component
+//public class SerieServiceImpl {
+//
+//    @Autowired
+//    ISerieRepository repository;
+//
+//    public Serie findByIdSerie(Integer id) {
+//        return repository.findByIdSerie(id);
+//    }
+//
+//    public Serie updateSerie(Serie serie) {
+//        return repository.save(serie);
+//    }
+//}
