@@ -78,7 +78,7 @@ public class RecentAnimeScan {
     EmailService emailService;
 
     public void scan() {
-        System.out.println("scan");
+//        System.out.println("scan");
         try {
 
             List<EpisodioThumbnails> eps = animeFlvDecoder
