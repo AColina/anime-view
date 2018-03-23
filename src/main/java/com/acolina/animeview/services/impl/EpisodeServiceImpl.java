@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-@Component
+//@Component
 public class EpisodeServiceImpl implements EpisodeService {
 
     @Autowired

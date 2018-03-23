@@ -31,6 +31,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -50,8 +51,8 @@ public class EpisodiosController {
     @Autowired
     AnimeFlvDecoder animeFlvDecoder;
 
-    @Autowired
-    EpisodeService service;
+//    @Autowired
+//    EpisodeService service;
 
     //    @RequestMapping(method = RequestMethod.GET)
     public @ResponseBody
@@ -72,9 +73,10 @@ public class EpisodiosController {
     public @ResponseBody
     ResponseEntity<List<REpisode>> recent() throws Exception {
 
-        List<REpisode> list = service.findEpisodeRecent();
+//        List<REpisode> list = service.findEpisodeRecent();
+        List<REpisode> list = new ArrayList<>();
 
-        return new ResponseEntity<>(list, HttpStatus.OK);
+        return new ResponseEntity<>(list, HttpStatus.NOT_FOUND);
 
     }
     @RequestMapping(method = RequestMethod.GET, value = "/")
@@ -82,9 +84,9 @@ public class EpisodiosController {
     public @ResponseBody
     ResponseEntity<Iterable<REpisode>> getAll() throws Exception {
 
-        Iterable<REpisode> list = service.findAll();
-
-        return new ResponseEntity<>(list, HttpStatus.OK);
+//        Iterable<REpisode> list = service.findAll();
+        List<REpisode> list = new ArrayList<>();
+        return new ResponseEntity<>(list, HttpStatus.NOT_FOUND);
 
     }
 
