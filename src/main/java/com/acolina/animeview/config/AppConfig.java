@@ -31,7 +31,7 @@ import org.springframework.data.redis.repository.configuration.EnableRedisReposi
 @SpringBootApplication
 @ImportResource({"classpath:quartz-context.xml"})
 //@EnableMongoRepositories(basePackages = "com.acolina.animeview.repository")
-@EnableRedisRepositories(basePackages = "com.acolina.animeview.repository")
+//@EnableRedisRepositories(basePackages = "com.acolina.animeview.repository")
 public class AppConfig {
 
     public static void main(String[] args) {
