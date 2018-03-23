@@ -17,7 +17,12 @@
  */
 package com.acolina.animeview.services;
 
+/**
+ * @author Angel Colina
+ */
 public interface EmailService {
 
     void sendErrorMail(Exception ex);
+
+    void sendErrorMail(String message, Object... params);
 }

@@ -27,6 +27,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.logging.Logger;
 
+/**
+ * @author Angel Colina
+ */
 @Component
 public class EmailServiceImpl implements EmailService {
 
@@ -40,12 +43,24 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public void sendErrorMail(Exception ex) {
 
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(to.split(","));
-        message.setSubject("Exeption on Run Anime View Demon");
-        message.setText(ExceptionUtils.getStackTrace(ex));
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(to.split(","));
+        mailMessage.setSubject("Exception on run Anime-View demon");
+        mailMessage.setText(ExceptionUtils.getStackTrace(ex));
         LOGGER.info("sending error email");
-        emailSender.send(message);
+        emailSender.send(mailMessage);
+
+    }
+
+    @Override
+    public void sendErrorMail(String message, Object... params) {
+
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(to.split(","));
+        mailMessage.setSubject("Error message on run Anime-View demon");
+        mailMessage.setText(String.format(message, params));
+        LOGGER.info("sending error email");
+        emailSender.send(mailMessage);
 
     }
 }

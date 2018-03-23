@@ -79,8 +79,8 @@ public class RecentAnimeScan {
     @Autowired
     EmailService emailService;
 
-    @Autowired
-    EpisodeRedisRepository repository;
+//    @Autowired
+//    EpisodeRedisRepository repository;
 
     public void scan() {
 //        System.out.println("scan");
@@ -112,9 +112,13 @@ public class RecentAnimeScan {
                     .get();
 
             if (!ds.exists()) {
-
-                Serie serie = saveSerie(episode.getUrlSerie());
-                algoliaSave(index, serie);
+                try {
+                    Serie serie = saveSerie(episode.getUrlSerie());
+                    algoliaSave(index, serie);
+                } catch (Exception ex) {
+                    emailService.sendErrorMail("Error al procesar Serie : %s",episode.getUrlSerie());
+                    throw ex;
+                }
             } else if (!validateExists(episode.getIdSerie(), ep.get_id())) {
                 saveEpisode(ep.getUrl());
             } else {
@@ -143,8 +147,8 @@ public class RecentAnimeScan {
     private void saveEpisode(String url) throws Exception {
         Episode e = animeFlvDecoder.decodeEpisode(url);
         e.setCreationDate(getCurrentTime());
-        REpisode redisEpisode= new REpisode(e);
-        repository.save(redisEpisode);
+        REpisode redisEpisode = new REpisode(e);
+//        repository.save(redisEpisode);
         firestore
                 .collection(collection)
                 .document(e.getIdSerie().toString())

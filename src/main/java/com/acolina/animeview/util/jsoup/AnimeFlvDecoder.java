@@ -209,7 +209,7 @@ public class AnimeFlvDecoder {
         Element container = doc.select(".Body div.Container .CpCn").first();
 
         Element capOptions = container.select(".CpCnB .CapOptns").first();
-        ep.setUrlSerie(capOptions.select(".CapNv").first().getAllElements().last().attr("href"));
+        ep.setUrlSerie(capOptions.select(".CapNv .CapNvLs").first().getAllElements().last().attr("href"));
         ep.setIdSerie(getId(ep.getUrlSerie()));
 
         return ep;
