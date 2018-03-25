@@ -85,6 +85,7 @@ public class EpisodiosController {
     ResponseEntity<Iterable<REpisode>> getAll() throws Exception {
 
 //        Iterable<REpisode> list = service.findAll();
+
         List<REpisode> list = new ArrayList<>();
         return new ResponseEntity<>(list, HttpStatus.NOT_FOUND);
 
