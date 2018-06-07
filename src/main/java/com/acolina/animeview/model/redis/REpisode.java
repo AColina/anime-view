@@ -20,13 +20,13 @@ package com.acolina.animeview.model.redis;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
-//import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.RedisHash;
 
 import java.io.Serializable;
 
 @Data
 @NoArgsConstructor
-//@RedisHash("episode")
+@RedisHash("episodes")
 public class REpisode implements Serializable {
 
     @Id

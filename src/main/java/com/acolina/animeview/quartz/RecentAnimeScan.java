@@ -22,8 +22,10 @@ import com.acolina.animeview.model.dto.EpisodeTemp;
 import com.acolina.animeview.model.dto.EpisodioThumbnails;
 import com.acolina.animeview.model.entity.EpisodeEntity;
 import com.acolina.animeview.model.entity.SerieEntity;
+import com.acolina.animeview.model.redis.REpisode;
 import com.acolina.animeview.repository.mongo.EpisodeMongoRepository;
 import com.acolina.animeview.repository.mongo.SerieMongoRepository;
+import com.acolina.animeview.repository.redis.EpisodeRedisRepository;
 import com.acolina.animeview.services.EmailService;
 import com.acolina.animeview.util.jsoup.AnimeFlvDecoder;
 import com.algolia.search.APIClient;
@@ -49,6 +51,8 @@ import java.util.logging.Logger;
 public class RecentAnimeScan {
 
     private static final Logger LOGGER = Logger.getLogger(RecentAnimeScan.class.getName());
+
+    ModelMapper mapper = new ModelMapper();
 
     private static EpisodioThumbnails recent;
 
@@ -76,8 +80,9 @@ public class RecentAnimeScan {
     @Autowired
     private EpisodeMongoRepository episodeMongoRepository;
 
-//    @Autowired
-//    EpisodeRedisRepository repository;
+    @Autowired
+    EpisodeRedisRepository redisRepository;
+
 
     public void scan() {
 //        System.out.println("scan");
@@ -133,15 +138,14 @@ public class RecentAnimeScan {
     private void saveEpisode(String url) throws Exception {
         EpisodeEntity e = animeFlvDecoder.decodeEpisode(url);
         e.setCreationDate(System.currentTimeMillis());
-//        REpisode redisEpisode = new REpisode(e);
-//        repository.save(redisEpisode);
+        REpisode redisEpisode = mapper.map(e, REpisode.class);
         episodeMongoRepository.save(e);
+        redisRepository.save(redisEpisode);
 
         LOGGER.info(String.format("save anime %d-%s", e.get_id(), e.getTitle()));
     }
 
     private void algoliaSave(Index<ASerie> index, SerieEntity serieEntity) throws AlgoliaException {
-        ModelMapper mapper = new ModelMapper();
         ASerie algoliaValue = mapper.map(serieEntity, ASerie.class);
         index.saveObject(serieEntity.get_id().toString(), algoliaValue).waitForCompletion();
     }

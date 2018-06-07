@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional
-public interface EpisodeRedisRepository extends CrudRepository<REpisode, String> {
+public interface EpisodeRedisRepository extends CrudRepository<REpisode, Integer> {
 
 
 }

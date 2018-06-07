@@ -20,28 +20,29 @@ package com.acolina.animeview.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-//import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
-//import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 
 
-//@Configuration
+@Configuration
 public class RedisConfiguration {
 
-//    @Bean
-//    public JedisConnectionFactory jedisConnectionFactory() {
-//        JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory();
-//        jedisConnectionFactory.setHostName("165.227.54.236");
-//        jedisConnectionFactory.setPort(6379);
-//        return jedisConnectionFactory;
-//    }
-//
-//    @Bean
-//    public RedisTemplate<?, ?> redisTemplate() {
-//        RedisTemplate<?, ?> redisTemplate = new RedisTemplate<>();
-//        redisTemplate.setConnectionFactory(jedisConnectionFactory());
-//        redisTemplate.setExposeConnection(true);
-////        System.out.println(redisTemplate.exec());
-//        return redisTemplate;
-//    }
+    @Bean
+    public JedisConnectionFactory jedisConnectionFactory() {
+        JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory();
+        jedisConnectionFactory.setHostName("redis-12544.c8.us-east-1-2.ec2.cloud.redislabs.com");
+        jedisConnectionFactory.setPort(12544);
+        jedisConnectionFactory.setPassword("QkPAoB6Z0L7nWW0gzdyIH6m1PvfXprQ6");
+        return jedisConnectionFactory;
+    }
+
+    @Bean
+    public RedisTemplate<?, ?> redisTemplate() {
+        RedisTemplate<?, ?> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(jedisConnectionFactory());
+        redisTemplate.setExposeConnection(true);
+//        System.out.println(redisTemplate.exec());
+        return redisTemplate;
+    }
 
 }
