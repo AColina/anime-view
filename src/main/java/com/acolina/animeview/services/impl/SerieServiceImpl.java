@@ -17,21 +17,21 @@
  */
 package com.acolina.animeview.services.impl;
 
-import com.acolina.animeview.model.entity.EpisodeEntity;
-import com.acolina.animeview.repository.mongo.EpisodeMongoRepository;
-import com.acolina.animeview.services.EpisodeService;
+import com.acolina.animeview.model.entity.SerieEntity;
+import com.acolina.animeview.repository.mongo.SerieMongoRepository;
+import com.acolina.animeview.services.SerieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class EpisodeServiceImpl implements EpisodeService {
+public class SerieServiceImpl implements SerieService {
 
     @Autowired
-    private EpisodeMongoRepository repository;
+    private SerieMongoRepository repository;
 
 
     @Override
-    public EpisodeEntity findById(Integer id) {
+    public SerieEntity findById(Integer id) {
         return repository.findOne(id);
     }
 }

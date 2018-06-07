@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -71,7 +72,7 @@ public class GlobalExceptionController {
         }
 
         result.put("status", status.value());
-        result.put("time", LocalDateTime.now());
+        result.put("time", LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/aaaa")));
         return new ResponseEntity<>(result, status);
 
     }

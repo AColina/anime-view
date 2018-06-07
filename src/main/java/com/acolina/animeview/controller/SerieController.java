@@ -17,77 +17,29 @@
  */
 package com.acolina.animeview.controller;
 
-import com.acolina.animeview.model.dto.SerieThumbnails;
+
+import com.acolina.animeview.model.dto.response.ResponseDTO;
 import com.acolina.animeview.model.entity.SerieEntity;
-import com.acolina.animeview.util.jsoup.AnimeFlvDecoder;
+import com.acolina.animeview.services.SerieService;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-//import com.acolina.animeview.services.impl.SerieServiceImpl;
-
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author angel
  */
-
+@RestController
 @RequestMapping("/serie")
 @Api(value = "serie", description = "Controlador rest para los serie")
 public class SerieController {
-
     @Autowired
-    AnimeFlvDecoder animeFlvDecoder;
+    private SerieService service;
 
-    @Value("${animeview.url.default}")
-    public  String URL;
-//    @Autowired
-//    SerieServiceImpl serieService;
-
-//    @RequestMapping(method = RequestMethod.GET,value = "/{id}")
-//    @ApiOperation(value = "Obtiene todos los datos del anime seleccionado")
-//    @Cacheable(value = "serie", key = "#id", unless = "#result == null")
-//    public @ResponseBody
-//    ResponseEntity<SerieEntity> get(@PathVariable(value = "id", required = true) Integer id) throws Exception {
-//        SerieEntity serie = serieService.findByIdSerie(id);
-//        return new ResponseEntity<>(serie, HttpStatus.OK);
-
-//    }
-
-//    @RequestMapping(method = RequestMethod.GET, value = "/emission")
-    @ApiOperation(value = "Obtiene una lista de series en emision")
+    @RequestMapping(value = "/{idSerie}", method = RequestMethod.GET)
     public @ResponseBody
-    ResponseEntity<List<SerieEntity>> emission() throws Exception {
-        try {
-            return new ResponseEntity<>(animeFlvDecoder.emissionSeriesThumbnails(), HttpStatus.OK);
-        } catch (Exception ex) {
-            Logger.getLogger(SerieController.class.getName()).log(Level.SEVERE, null, ex);
-            throw ex;
-        }
-    }
-
-//    @RequestMapping(method = RequestMethod.GET, value = "/recent")
-    @ApiOperation(value = "Obtiene una lista de series cargados recientemente")
-    public @ResponseBody
-    ResponseEntity<List<SerieThumbnails>> recent() throws Exception {
-
-        try {
-            Document doc = Jsoup.connect(URL).get();
-            return new ResponseEntity<>(animeFlvDecoder.decodeSeriesThumbnails(doc, "main .ListAnimes li"), HttpStatus.OK);
-        } catch (Exception ex) {
-            Logger.getLogger(SerieController.class.getName()).log(Level.SEVERE, null, ex);
-            throw ex;
-        }
+    ResponseEntity<ResponseDTO<SerieEntity>> getEpisode(@PathVariable(required = true, value = "idSerie") Integer id) throws Exception {
+        return ResponseDTO.ok(service.findById(id));
 
     }
 

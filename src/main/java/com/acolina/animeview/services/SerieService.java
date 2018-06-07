@@ -15,23 +15,11 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package com.acolina.animeview.services.impl;
+package com.acolina.animeview.services;
 
-import com.acolina.animeview.model.entity.EpisodeEntity;
-import com.acolina.animeview.repository.mongo.EpisodeMongoRepository;
-import com.acolina.animeview.services.EpisodeService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import com.acolina.animeview.model.entity.SerieEntity;
 
-@Service
-public class EpisodeServiceImpl implements EpisodeService {
+public interface SerieService {
 
-    @Autowired
-    private EpisodeMongoRepository repository;
-
-
-    @Override
-    public EpisodeEntity findById(Integer id) {
-        return repository.findOne(id);
-    }
+    SerieEntity findById(Integer id);
 }
