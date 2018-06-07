@@ -17,41 +17,21 @@
  */
 package com.acolina.animeview.services.impl;
 
-import com.acolina.animeview.model.redis.REpisode;
-import com.acolina.animeview.repository.EpisodeRedisRepository;
+import com.acolina.animeview.model.entity.EpisodeEntity;
+import com.acolina.animeview.repository.mongo.EpisodeMongoRepository;
 import com.acolina.animeview.services.EpisodeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
-
-//@Component
+@Service
 public class EpisodeServiceImpl implements EpisodeService {
 
     @Autowired
-    EpisodeRedisRepository repository;
+    private EpisodeMongoRepository repository;
+
 
     @Override
-    public List<REpisode> findByCreationDateLessThan(Long creationDate) {
-
-        Stream<REpisode> stream = StreamSupport.stream(repository.findAll().spliterator(), false);
-        List<REpisode> lst = stream.filter(e -> e.getCreationDate() < creationDate)
-                .collect(Collectors.toList());
-        return lst;
-    }
-
-    @Override
-    public List<REpisode> findEpisodeRecent() {
-        Calendar c = Calendar.getInstance();
-        c.add(Calendar.DATE, 7);
-        return findByCreationDateLessThan(c.getTimeInMillis() / 1000);
-    }
-    public Iterable<REpisode> findAll(){
-        return repository.findAll();
+    public EpisodeEntity findById(Integer id) {
+        return repository.findBy_id(id);
     }
 }

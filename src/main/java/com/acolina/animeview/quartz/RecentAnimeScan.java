@@ -20,29 +20,23 @@ package com.acolina.animeview.quartz;
 import com.acolina.animeview.model.algolia.ASerie;
 import com.acolina.animeview.model.dto.EpisodeTemp;
 import com.acolina.animeview.model.dto.EpisodioThumbnails;
-import com.acolina.animeview.model.entity.Episode;
-import com.acolina.animeview.model.entity.Serie;
-import com.acolina.animeview.model.firebase.FSerie;
-import com.acolina.animeview.model.redis.REpisode;
-import com.acolina.animeview.repository.EpisodeRedisRepository;
+import com.acolina.animeview.model.entity.EpisodeEntity;
+import com.acolina.animeview.model.entity.SerieEntity;
+import com.acolina.animeview.repository.mongo.EpisodeMongoRepository;
+import com.acolina.animeview.repository.mongo.SerieMongoRepository;
 import com.acolina.animeview.services.EmailService;
 import com.acolina.animeview.util.jsoup.AnimeFlvDecoder;
-import com.acolina.animeview.util.mapper.algolia.AlgoliaMapper;
 import com.algolia.search.APIClient;
 import com.algolia.search.Index;
 import com.algolia.search.exceptions.AlgoliaException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.cloud.firestore.DocumentSnapshot;
-import com.google.cloud.firestore.Firestore;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
@@ -59,25 +53,28 @@ public class RecentAnimeScan {
     private static EpisodioThumbnails recent;
 
     @Autowired
-    Firestore firestore;
+    private AnimeFlvDecoder animeFlvDecoder;
 
     @Autowired
-    AnimeFlvDecoder animeFlvDecoder;
+    private APIClient client;
 
-    @Autowired
-    APIClient client;
-
-    @Value("${collection.serie}")
-    String collection;
+    @Value("${collection.series}")
+    private String collection;
 
     @Value("${collection.episodes}")
-    String episodeCollection;
+    private String episodeCollection;
 
     @Value("${animeview.url.default}")
-    public String URL;
+    private String URL;
 
     @Autowired
-    EmailService emailService;
+    private EmailService emailService;
+
+    @Autowired
+    private SerieMongoRepository serieMongoRepository;
+
+    @Autowired
+    private EpisodeMongoRepository episodeMongoRepository;
 
 //    @Autowired
 //    EpisodeRedisRepository repository;
@@ -105,21 +102,16 @@ public class RecentAnimeScan {
 
             EpisodeTemp episode = animeFlvDecoder.decodeEpisodeTemp(ep.getUrl());
 
-
-            DocumentSnapshot ds = firestore.collection(collection)
-                    .document(episode.getIdSerie().toString())
-                    .get()
-                    .get();
-
-            if (!ds.exists()) {
+            SerieEntity se = serieMongoRepository.findOne(episode.getIdSerie());
+            if (Objects.isNull(se)) {
                 try {
-                    Serie serie = saveSerie(episode.getUrlSerie());
-                    algoliaSave(index, serie);
+                    SerieEntity serieEntity = saveSerie(episode.getUrlSerie());
+                    algoliaSave(index, serieEntity);
                 } catch (Exception ex) {
-                    emailService.sendErrorMail("Error al procesar Serie : %s",episode.getUrlSerie());
+                    emailService.sendErrorMail("Error al procesar SerieEntity : %s", episode.getUrlSerie());
                     throw ex;
                 }
-            } else if (!validateExists(episode.getIdSerie(), ep.get_id())) {
+            } else if (!validateExists(ep.get_id())) {
                 saveEpisode(ep.getUrl());
             } else {
                 LOGGER.info("no hay animes que guardar");
@@ -128,55 +120,34 @@ public class RecentAnimeScan {
 
     }
 
-    private Serie saveSerie(String url) throws Exception {
-        Serie serie = animeFlvDecoder.decodeSerie(url);
-        Calendar c = Calendar.getInstance();
-        serie.setYear(c.get(Calendar.YEAR));
-        ObjectMapper mapper = new ObjectMapper();
-        FSerie fs = mapper.readValue(mapper.writeValueAsBytes(serie), FSerie.class);
-        firestore
-                .collection(collection)
-                .document(serie.get_id().toString())
-                .set(fs);
-        for (Episode e : serie.getEpisodes()) {
+    private SerieEntity saveSerie(String url) throws Exception {
+        SerieEntity serieEntity = animeFlvDecoder.decodeSerie(url);
+        serieEntity.setYear(LocalDate.now().getYear());
+        serieMongoRepository.save(serieEntity);
+        for (EpisodeEntity e : serieEntity.getEpisodeEntities()) {
             saveEpisode(e.getUrl());
         }
-        return serie;
+        return serieEntity;
     }
 
     private void saveEpisode(String url) throws Exception {
-        Episode e = animeFlvDecoder.decodeEpisode(url);
-        e.setCreationDate(getCurrentTime());
-        REpisode redisEpisode = new REpisode(e);
+        EpisodeEntity e = animeFlvDecoder.decodeEpisode(url);
+        e.setCreationDate(System.currentTimeMillis());
+//        REpisode redisEpisode = new REpisode(e);
 //        repository.save(redisEpisode);
-        firestore
-                .collection(collection)
-                .document(e.getIdSerie().toString())
-                .collection(episodeCollection)
-                .document(e.get_id().toString())
-                .set(e);
+        episodeMongoRepository.save(e);
 
         LOGGER.info(String.format("save anime %d-%s", e.get_id(), e.getTitle()));
     }
 
-    private int getCurrentTime() {
-        return (int) (new Date().getTime() / 1000);
+    private void algoliaSave(Index<ASerie> index, SerieEntity serieEntity) throws AlgoliaException {
+        ModelMapper mapper = new ModelMapper();
+        ASerie algoliaValue = mapper.map(serieEntity, ASerie.class);
+        index.saveObject(serieEntity.get_id().toString(), algoliaValue).waitForCompletion();
     }
 
-    private void algoliaSave(Index<ASerie> index, Serie serie) throws AlgoliaException {
-        AlgoliaMapper mapper = new AlgoliaMapper();
-        ASerie algoliaValue = mapper.map(serie);
-        index.saveObject(serie.get_id().toString(), algoliaValue).waitForCompletion();
-    }
-
-    private boolean validateExists(Integer idSerie, Integer idEpisode) throws Exception {
-        DocumentSnapshot ds = firestore.collection(collection)
-                .document(idSerie.toString())
-                .collection(episodeCollection)
-                .document(idEpisode.toString())
-                .get()
-                .get();
-        return ds.exists();
+    private boolean validateExists(Integer idEpisode) {
+        return Objects.nonNull(episodeMongoRepository.findOne(idEpisode));
     }
 
     private boolean isLast(EpisodioThumbnails episodioThumbnails) {
@@ -189,7 +160,7 @@ public class RecentAnimeScan {
 
     }
 
-    private Document getDocument() {
+    private org.jsoup.nodes.Document getDocument() {
         try {
             return Jsoup.connect(URL).get();
         } catch (IOException e) {

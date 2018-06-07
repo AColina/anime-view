@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Pivotal Software, Inc.
+ * Copyright (C) 2018 Pivotal Software, Inc.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,47 +15,16 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package com.acolina.animeview.model.entity;
+package com.acolina.animeview.repository.mongo;
+
+import com.acolina.animeview.model.entity.Entity;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 /**
  * @author Angel Colina
+ * @version 1.0
  */
-public class Links {
+public interface AbstractMongoRepository<T extends Entity> extends MongoRepository<T, Integer> {
 
-    private Integer _id;
-    private String url;
-    private String title;
-    private String text;
-
-    public Integer get_id() {
-        return _id;
-    }
-
-    public void set_id(Integer _id) {
-        this._id = _id;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
 }

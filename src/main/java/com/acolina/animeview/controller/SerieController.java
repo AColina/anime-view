@@ -17,9 +17,8 @@
  */
 package com.acolina.animeview.controller;
 
-import com.acolina.animeview.config.AppConfig;
 import com.acolina.animeview.model.dto.SerieThumbnails;
-import com.acolina.animeview.model.entity.Serie;
+import com.acolina.animeview.model.entity.SerieEntity;
 import com.acolina.animeview.util.jsoup.AnimeFlvDecoder;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -59,8 +58,8 @@ public class SerieController {
 //    @ApiOperation(value = "Obtiene todos los datos del anime seleccionado")
 //    @Cacheable(value = "serie", key = "#id", unless = "#result == null")
 //    public @ResponseBody
-//    ResponseEntity<Serie> get(@PathVariable(value = "id", required = true) Integer id) throws Exception {
-//        Serie serie = serieService.findByIdSerie(id);
+//    ResponseEntity<SerieEntity> get(@PathVariable(value = "id", required = true) Integer id) throws Exception {
+//        SerieEntity serie = serieService.findByIdSerie(id);
 //        return new ResponseEntity<>(serie, HttpStatus.OK);
 
 //    }
@@ -68,7 +67,7 @@ public class SerieController {
 //    @RequestMapping(method = RequestMethod.GET, value = "/emission")
     @ApiOperation(value = "Obtiene una lista de series en emision")
     public @ResponseBody
-    ResponseEntity<List<Serie>> emission() throws Exception {
+    ResponseEntity<List<SerieEntity>> emission() throws Exception {
         try {
             return new ResponseEntity<>(animeFlvDecoder.emissionSeriesThumbnails(), HttpStatus.OK);
         } catch (Exception ex) {

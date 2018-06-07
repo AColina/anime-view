@@ -17,15 +17,19 @@
  */
 package com.acolina.animeview.model.algolia;
 
-import com.acolina.animeview.model.entity.Entity;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 /**
  * @author Angel Colina
  */
-public class ASerie extends Entity {
+@Data
+@NoArgsConstructor
+public class ASerie {
 
+    private Integer _id;
     private String url;
     private String title;
     private String urlFront;
@@ -36,75 +40,5 @@ public class ASerie extends Entity {
     private String rating;
     private Integer year;
 
-    public String getUrl() {
-        return url;
-    }
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getUrlFront() {
-        return urlFront;
-    }
-
-    public void setUrlFront(String urlFront) {
-        this.urlFront = urlFront;
-    }
-
-    public String getSynopsis() {
-        return synopsis;
-    }
-
-    public void setSynopsis(String synopsis) {
-        this.synopsis = synopsis;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getRating() {
-        return rating;
-    }
-
-    public void setRating(String rating) {
-        this.rating = rating;
-    }
-
-    public List<String> getGenders() {
-        return genders;
-    }
-
-    public void setGenders(List<String> genders) {
-        this.genders = genders;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
-    }
-
-    public Integer getYear() {
-        return year;
-    }
-
-    public void setYear(Integer year) {
-        this.year = year;
-    }
 }

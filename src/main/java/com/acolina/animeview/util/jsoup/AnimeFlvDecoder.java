@@ -17,7 +17,6 @@
  */
 package com.acolina.animeview.util.jsoup;
 
-import com.acolina.animeview.config.AppConfig;
 import com.acolina.animeview.model.dto.*;
 
 import java.net.URI;
@@ -113,22 +112,22 @@ public class AnimeFlvDecoder {
         return e;
     }
 
-    public List<Serie> emissionSeriesThumbnails() throws Exception {
-        List<Serie> eps = new ArrayList<>();
+    public List<SerieEntity> emissionSeriesThumbnails() throws Exception {
+        List<SerieEntity> eps = new ArrayList<>();
         Document doc = Jsoup.connect(URL).get();
         for (Element el : doc.select(".Sidebar .Emision ul.ListSdbr li")) {
             Element aTag = el.child(0);
-            Serie e = decodeSerie(aTag.attr("href"));
+            SerieEntity e = decodeSerie(aTag.attr("href"));
             eps.add(e);
         }
 
         return eps;
     }
 
-    public Serie decodeSerie(String url) throws Exception {
+    public SerieEntity decodeSerie(String url) throws Exception {
 
         Document doc = Jsoup.connect(URL.concat(url)).get();
-        Serie s = new Serie();
+        SerieEntity s = new SerieEntity();
         s.setUrl(url);
         s.set_id(getId(url));
 
@@ -163,12 +162,12 @@ public class AnimeFlvDecoder {
                 s.setNextEpisode(epe);
             } else {
                 try {
-                    Episode epe = new Episode();
+                    EpisodeEntity epe = new EpisodeEntity();
                     epe.setUrl(atag.attr("href"));
-//                Episode epe = decodeEpisode(atag.attr("href"));
+//                EpisodeEntity epe = decodeEpisode(atag.attr("href"));
                     epe.setTitle(title);
                     epe.setName(atag.select("p").first().text());
-                    s.getEpisodes().add(epe);
+                    s.getEpisodeEntities().add(epe);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -176,13 +175,13 @@ public class AnimeFlvDecoder {
         });
 
         main.select(".WdgtCn .ListEpisodes li a").forEach((Element atag) -> {
-            Episode epe = null;
+            EpisodeEntity epe = null;
             try {
-                epe = new Episode();
+                epe = new EpisodeEntity();
                 epe.setUrl(atag.attr("href"));
 //                epe = decodeEpisode(atag.attr("href"));
                 epe.setTitle(atag.text());
-                s.getEpisodes().add(epe);
+                s.getEpisodeEntities().add(epe);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -215,10 +214,10 @@ public class AnimeFlvDecoder {
         return ep;
     }
 
-    public Episode decodeEpisode(String url) throws Exception {
+    public EpisodeEntity decodeEpisode(String url) throws Exception {
 
         Document doc = Jsoup.connect(URL.concat(url)).get();
-        Episode ep = new Episode();
+        EpisodeEntity ep = new EpisodeEntity();
         Element container = doc.select(".Body div.Container .CpCn").first();
         ep.setUrl(url);
         ep.set_id(getId(url));

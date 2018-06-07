@@ -17,14 +17,12 @@
  */
 package com.acolina.animeview.services;
 
+import com.acolina.animeview.model.entity.EpisodeEntity;
 import com.acolina.animeview.model.redis.REpisode;
 
 import java.util.List;
 
 public interface EpisodeService {
 
-    Iterable<REpisode> findAll();
-    List<REpisode> findByCreationDateLessThan(Long creationDate);
-
-    List<REpisode> findEpisodeRecent();
+    EpisodeEntity findById(Integer id);
 }

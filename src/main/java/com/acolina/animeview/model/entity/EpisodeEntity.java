@@ -15,29 +15,36 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package com.acolina.animeview.model.firebase;
+package com.acolina.animeview.model.entity;
 
-import java.io.Serializable;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Angel Colina
  */
-public class FEpisode implements Serializable {
+@Document(collection = "episodes")
+public class EpisodeEntity extends Entity implements IEntity {
 
-    private Integer idEpisode;
+    private Integer idSerie;
     private String title;
     private String name;
     private String url;
+    private Long creationDate;
+    private List<Video> videos;
 
-    public FEpisode() {
+    public EpisodeEntity() {
     }
 
-    public Integer getIdEpisode() {
-        return idEpisode;
+    public Integer getIdSerie() {
+        return idSerie;
     }
 
-    public void setIdEpisode(Integer idEpisode) {
-        this.idEpisode = idEpisode;
+    public void setIdSerie(Integer idSerie) {
+        this.idSerie = idSerie;
     }
 
     public String getTitle() {
@@ -64,5 +71,22 @@ public class FEpisode implements Serializable {
         this.url = url;
     }
 
+    public List<Video> getVideos() {
+        if (Objects.isNull(videos)) {
+            videos = new ArrayList<>();
+        }
+        return videos;
+    }
 
+    public void setVideos(List<Video> videos) {
+        this.videos = videos;
+    }
+
+    public Long getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Long creationDate) {
+        this.creationDate = creationDate;
+    }
 }

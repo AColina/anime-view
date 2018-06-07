@@ -17,24 +17,13 @@
  */
 package com.acolina.animeview.controller;
 
-import com.acolina.animeview.model.dto.EpisodioThumbnails;
-import com.acolina.animeview.model.redis.REpisode;
+import com.acolina.animeview.model.dto.response.ResponseDTO;
+import com.acolina.animeview.model.entity.EpisodeEntity;
 import com.acolina.animeview.services.EpisodeService;
-import com.acolina.animeview.util.jsoup.AnimeFlvDecoder;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author angel
@@ -45,49 +34,14 @@ import java.util.logging.Logger;
 @Api(value = "episode", description = "Controlador rest para los episodios")
 public class EpisodiosController {
 
-    @Value("${animeview.url.default}")
-    public String URL;
 
     @Autowired
-    AnimeFlvDecoder animeFlvDecoder;
+    private EpisodeService service;
 
-//    @Autowired
-//    EpisodeService service;
-
-    //    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "/{idEpisode}", method = RequestMethod.GET)
     public @ResponseBody
-    ResponseEntity<List<EpisodioThumbnails>> getEpisodio(@RequestParam(required = true, value = "url") String Url) throws Exception {
-
-        try {
-            Document doc = Jsoup.connect(URL).get();
-            return new ResponseEntity<>(animeFlvDecoder.decodeEpisodiosThumbnails(doc, "main .ListEpisodios li"), HttpStatus.OK);
-        } catch (Exception ex) {
-            Logger.getLogger(EpisodiosController.class.getName()).log(Level.SEVERE, null, ex);
-            throw ex;
-        }
-
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/recent")
-    @ApiOperation(value = "Obtiene una lista de episodios cargados recientemente")
-    public @ResponseBody
-    ResponseEntity<List<REpisode>> recent() throws Exception {
-
-//        List<REpisode> list = service.findEpisodeRecent();
-        List<REpisode> list = new ArrayList<>();
-
-        return new ResponseEntity<>(list, HttpStatus.NOT_FOUND);
-
-    }
-    @RequestMapping(method = RequestMethod.GET, value = "/")
-    @ApiOperation(value = "Obtiene una lista de episodios cargados recientemente")
-    public @ResponseBody
-    ResponseEntity<Iterable<REpisode>> getAll() throws Exception {
-
-//        Iterable<REpisode> list = service.findAll();
-
-        List<REpisode> list = new ArrayList<>();
-        return new ResponseEntity<>(list, HttpStatus.NOT_FOUND);
+    ResponseEntity<ResponseDTO<EpisodeEntity>> getEpisode(@PathVariable(required = true, value = "idEpisode") Integer id) throws Exception {
+        return ResponseDTO.ok(service.findById(id));
 
     }
 

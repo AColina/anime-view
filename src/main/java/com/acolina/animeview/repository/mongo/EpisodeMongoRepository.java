@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Pivotal Software, Inc.
+ * Copyright (C) 2018 Pivotal Software, Inc.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,20 +15,26 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package com.acolina.animeview.util.mapper.algolia;
+package com.acolina.animeview.repository.mongo;
 
+import com.acolina.animeview.model.entity.EpisodeEntity;
+import com.acolina.animeview.model.entity.SerieEntity;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.acolina.animeview.util.mapper.Mapper;
-import com.acolina.animeview.util.reflection.ReflectionUtils;
 
 /**
  * @author Angel Colina
+ * @version 1.0
  */
-public class AlgoliaMapper extends Mapper {
+@Repository
+@Transactional
+public interface EpisodeMongoRepository extends AbstractMongoRepository<EpisodeEntity> {
 
-    @Override
-    public <T> T getMapClass(Class enity) {
-        return ReflectionUtils
-                .newInstance(String.format("com.acolina.animeview.migrator.model.algolia.A%s", enity.getSimpleName()));
-    }
+    EpisodeEntity findBy_id(Integer id);
+
+    EpisodeEntity findByCreationDateBetween(Long firstDate, Long lastDate);
+
+    EpisodeEntity findByCreationDateGreaterThanEqual(Long date);
+
 }

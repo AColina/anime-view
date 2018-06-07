@@ -15,19 +15,23 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package com.acolina.animeview.model.firebase;
+package com.acolina.animeview.model.entity;
 
-import com.acolina.animeview.model.entity.Entity;
-import com.acolina.animeview.model.entity.Links;
-import com.acolina.animeview.model.entity.NextEpisode;
 
-import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
 
 /**
  * @author Angel Colina
  */
-public class FSerie extends Entity {
+@Document(collection = "series")
+public class SerieEntity extends Entity implements IEntity {
 
     private String url;
     private String title;
@@ -40,6 +44,9 @@ public class FSerie extends Entity {
     private String backgroundImage;
     private String rating;
     private NextEpisode nextEpisode;
+    @JsonIgnore
+    private @Transient
+    List<EpisodeEntity> episodeEntities;
     private Integer year;
 
     public String getUrl() {
@@ -75,6 +82,9 @@ public class FSerie extends Entity {
     }
 
     public List<String> getGenders() {
+        if (Objects.isNull(genders)) {
+            genders = new ArrayList<>();
+        }
         return genders;
     }
 
@@ -83,6 +93,9 @@ public class FSerie extends Entity {
     }
 
     public List<Links> getLinks() {
+        if (Objects.isNull(links)) {
+            links = new ArrayList<>();
+        }
         return links;
     }
 
@@ -120,6 +133,17 @@ public class FSerie extends Entity {
 
     public void setRating(String rating) {
         this.rating = rating;
+    }
+
+    public List<EpisodeEntity> getEpisodeEntities() {
+        if (Objects.isNull(episodeEntities)) {
+            episodeEntities = new ArrayList<>();
+        }
+        return episodeEntities;
+    }
+
+    public void setEpisodeEntities(List<EpisodeEntity> episodeEntities) {
+        this.episodeEntities = episodeEntities;
     }
 
     public NextEpisode getNextEpisode() {
