@@ -41,5 +41,7 @@ public class REpisode implements Serializable {
     private String url;
     private Long creationDate;
 
-
+    public Integer get_id() {
+        return _id;
+    }
 }

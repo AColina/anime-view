@@ -15,21 +15,30 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package com.acolina.animeview.services;
-
-import com.acolina.animeview.model.entity.EpisodeEntity;
-import com.acolina.animeview.model.redis.REpisode;
-
-import java.util.List;
-import java.util.Set;
+package com.acolina.animeview.controller.sync;
 
 /**
  * @author Angel Colina
  * @version 1.0
  */
-public interface EpisodeService {
+public class AnimeFlvSynchronized {
 
-    EpisodeEntity findById(Integer id);
+    private static final AnimeFlvSynchronized syncronice = new AnimeFlvSynchronized();
 
-    public Set<REpisode> findRecent();
+    private long lastUpdateEpisode;
+
+    private AnimeFlvSynchronized() {
+    }
+
+    public long getLastUpdateEpisode() {
+        return lastUpdateEpisode;
+    }
+
+    public void setLastUpdateEpisode(long lastUpdateEpisode) {
+        this.lastUpdateEpisode = lastUpdateEpisode;
+    }
+
+    public static AnimeFlvSynchronized getInstance() {
+        return syncronice;
+    }
 }

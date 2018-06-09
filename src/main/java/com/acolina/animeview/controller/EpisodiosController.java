@@ -19,11 +19,15 @@ package com.acolina.animeview.controller;
 
 import com.acolina.animeview.model.dto.response.ResponseDTO;
 import com.acolina.animeview.model.entity.EpisodeEntity;
+import com.acolina.animeview.model.redis.REpisode;
 import com.acolina.animeview.services.EpisodeService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Angel Colina
@@ -42,6 +46,13 @@ public class EpisodiosController {
     public @ResponseBody
     ResponseEntity<ResponseDTO<EpisodeEntity>> getEpisode(@PathVariable(required = true, value = "idEpisode") Integer id) throws Exception {
         return ResponseDTO.ok(service.findById(id));
+
+    }
+
+    @RequestMapping(value = "/recent", method = RequestMethod.GET)
+    public @ResponseBody
+    ResponseEntity<ResponseDTO<Set<REpisode>>> findRecent() throws Exception {
+        return ResponseDTO.ok(service.findRecent());
 
     }
 

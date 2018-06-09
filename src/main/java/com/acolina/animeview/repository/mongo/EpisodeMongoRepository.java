@@ -18,9 +18,10 @@
 package com.acolina.animeview.repository.mongo;
 
 import com.acolina.animeview.model.entity.EpisodeEntity;
-import com.acolina.animeview.model.entity.SerieEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Set;
 
 /**
  * @author Angel Colina
@@ -34,6 +35,6 @@ public interface EpisodeMongoRepository extends AbstractMongoRepository<EpisodeE
 
     EpisodeEntity findByCreationDateBetween(Long firstDate, Long lastDate);
 
-    EpisodeEntity findByCreationDateGreaterThanEqual(Long date);
+    Set<EpisodeEntity> findByCreationDateGreaterThanEqualOrderByCreationDate(Long date);
 
 }

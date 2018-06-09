@@ -22,6 +22,8 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Set;
+
 /**
  * @author Angel Colina
  * @version 1.0
@@ -30,6 +32,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public interface EpisodeRedisRepository extends CrudRepository<REpisode, Integer> {
 
-
+    Set<REpisode> findByCreationDateGreaterThanEqual(long creationDate);
 }
 
