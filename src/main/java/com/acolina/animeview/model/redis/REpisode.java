@@ -44,4 +44,8 @@ public class REpisode implements Serializable {
     public Integer get_id() {
         return _id;
     }
+
+    public Long getCreationDate() {
+        return creationDate;
+    }
 }

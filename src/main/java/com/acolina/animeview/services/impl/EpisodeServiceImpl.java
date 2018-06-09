@@ -34,10 +34,12 @@ import java.time.ZoneId;
 
 import static java.time.temporal.ChronoUnit.*;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * @author Angel Colina
@@ -66,12 +68,16 @@ public class EpisodeServiceImpl implements EpisodeService {
 
     @Override
     public Set<REpisode> findRecent() {
+
         long time = LocalDateTime.now()
                 .minusDays(7)
                 .atZone(ZoneId.of(ZoneId.SHORT_IDS.get("PST")))
                 .toInstant()
                 .toEpochMilli();
-        Set<REpisode> redisEpisodes = redisRepository.findByCreationDateGreaterThanEqual(time);
+
+        Stream<REpisode> stream = StreamSupport.stream(redisRepository.findAll().spliterator(), false);
+        Set<REpisode> redisEpisodes = stream.filter(e -> e.getCreationDate() > time)
+                .collect(Collectors.toSet());
 
         if (validRedisData(redisEpisodes.size())) {
             Set<EpisodeEntity> entities = repository.findByCreationDateGreaterThanEqualOrderByCreationDate(time);
