@@ -21,6 +21,7 @@ import com.acolina.animeview.model.dto.response.ResponseDTO;
 import com.acolina.animeview.model.entity.SerieEntity;
 import com.acolina.animeview.services.SerieService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,12 +34,14 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/serie")
 @Api(value = "serie", description = "Controlador rest para los serie")
 public class SerieController {
+
     @Autowired
     private SerieService service;
 
     @RequestMapping(value = "/{idSerie}", method = RequestMethod.GET)
+    @ApiOperation(value = "Obtener Serie por id")
     public @ResponseBody
-    ResponseEntity<ResponseDTO<SerieEntity>> getEpisode(@PathVariable(required = true, value = "idSerie") Integer id) throws Exception {
+    ResponseEntity<ResponseDTO<SerieEntity>> getSerie(@PathVariable(required = true, value = "idSerie") Integer id) throws Exception {
         return ResponseDTO.ok(service.findById(id));
 
     }
