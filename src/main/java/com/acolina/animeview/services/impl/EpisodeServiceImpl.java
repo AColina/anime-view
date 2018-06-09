@@ -34,9 +34,7 @@ import java.time.ZoneId;
 
 import static java.time.temporal.ChronoUnit.*;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -92,8 +90,9 @@ public class EpisodeServiceImpl implements EpisodeService {
 
         }
 
-
-        return redisEpisodes;
+        return redisEpisodes.stream()
+                .sorted(Comparator.comparingLong(REpisode::getCreationDate))
+                .collect(Collectors.toSet());
     }
 
     private boolean validRedisData(int dataSize) {
