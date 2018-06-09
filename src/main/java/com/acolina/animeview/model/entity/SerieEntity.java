@@ -17,7 +17,6 @@
  */
 package com.acolina.animeview.model.entity;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -26,9 +25,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-
 /**
  * @author Angel Colina
+ * @version 1.0
  */
 @Document(collection = "series")
 public class SerieEntity extends Entity implements IEntity {

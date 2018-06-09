@@ -26,6 +26,7 @@ import org.springframework.data.redis.repository.configuration.EnableRedisReposi
 
 /**
  * @author Angel Colina
+ * @version 1.0
  */
 @ComponentScan(basePackages = "com.acolina.animeview")
 @SpringBootApplication

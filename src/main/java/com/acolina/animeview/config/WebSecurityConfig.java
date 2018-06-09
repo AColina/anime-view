@@ -27,6 +27,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 /**
  * @author Angel Colina
+ * @version 1.0
  */
 @Configuration
 @Order(-20) // Very important

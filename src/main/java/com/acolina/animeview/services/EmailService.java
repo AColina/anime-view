@@ -19,6 +19,7 @@ package com.acolina.animeview.services;
 
 /**
  * @author Angel Colina
+ * @version 1.0
  */
 public interface EmailService {
 

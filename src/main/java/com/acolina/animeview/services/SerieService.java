@@ -19,6 +19,10 @@ package com.acolina.animeview.services;
 
 import com.acolina.animeview.model.entity.SerieEntity;
 
+/**
+ * @author Angel Colina
+ * @version 1.0
+ */
 public interface SerieService {
 
     SerieEntity findById(Integer id);

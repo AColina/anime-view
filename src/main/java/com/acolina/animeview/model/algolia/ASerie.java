@@ -24,6 +24,7 @@ import java.util.List;
 
 /**
  * @author Angel Colina
+ * @version 1.0
  */
 @Data
 @NoArgsConstructor

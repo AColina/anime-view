@@ -31,6 +31,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * @author Angel Colina
+ * @version 1.0
  */
 @Component
 public class SimpleCORSFilter implements Filter {

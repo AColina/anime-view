@@ -21,6 +21,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * @author Angel Colina
+ * @version 1.0
  */
 public class EpisodioThumbnails {
 

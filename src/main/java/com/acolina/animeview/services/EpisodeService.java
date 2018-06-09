@@ -22,6 +22,10 @@ import com.acolina.animeview.model.redis.REpisode;
 
 import java.util.List;
 
+/**
+ * @author Angel Colina
+ * @version 1.0
+ */
 public interface EpisodeService {
 
     EpisodeEntity findById(Integer id);

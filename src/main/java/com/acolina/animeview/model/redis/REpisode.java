@@ -24,6 +24,10 @@ import org.springframework.data.redis.core.RedisHash;
 
 import java.io.Serializable;
 
+/**
+ * @author Angel Colina
+ * @version 1.0
+ */
 @Data
 @NoArgsConstructor
 @RedisHash("episodes")

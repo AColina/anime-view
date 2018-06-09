@@ -17,5 +17,9 @@
  */
 package com.acolina.animeview.model.entity;
 
+/**
+ * @author Angel Colina
+ * @version 1.0
+ */
 public interface IEntity {
 }

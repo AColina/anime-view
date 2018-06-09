@@ -20,6 +20,7 @@ package com.acolina.animeview.config;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -32,6 +33,7 @@ import org.springframework.web.client.RestTemplate;
 
 /**
  * @author Angel Colina
+ * @version 1.0
  */
 @Configuration
 public class RestTemplateConfig {
@@ -47,7 +49,7 @@ public class RestTemplateConfig {
 
         @Override
         public ClientHttpResponse intercept(HttpRequest request, byte[] body,
-                ClientHttpRequestExecution execution) throws IOException {
+                                            ClientHttpRequestExecution execution) throws IOException {
             HttpHeaders headers = request.getHeaders();
             headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
             headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");

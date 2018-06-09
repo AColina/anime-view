@@ -22,6 +22,10 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * @author Angel Colina
+ * @version 1.0
+ */
 @Repository
 @Transactional
 public interface EpisodeRedisRepository extends CrudRepository<REpisode, Integer> {

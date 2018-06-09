@@ -25,6 +25,7 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * @author Angel Colina
+ * @version 1.0
  */
 @Configuration
 public class AlgoliaConfig {
@@ -36,7 +37,7 @@ public class AlgoliaConfig {
     String apiKey;
 
     @Bean
-    public APIClient algoliaClient(){
+    public APIClient algoliaClient() {
         return new ApacheAPIClientBuilder(applicationId, apiKey).build();
     }
 }

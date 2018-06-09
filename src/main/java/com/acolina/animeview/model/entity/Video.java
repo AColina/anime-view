@@ -17,6 +17,10 @@
  */
 package com.acolina.animeview.model.entity;
 
+/**
+ * @author Angel Colina
+ * @version 1.0
+ */
 public class Video implements IEntity {
 
     private String urlVideo;

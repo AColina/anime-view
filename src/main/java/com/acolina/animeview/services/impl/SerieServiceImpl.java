@@ -23,6 +23,10 @@ import com.acolina.animeview.services.SerieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * @author Angel Colina
+ * @version 1.0
+ */
 @Service
 public class SerieServiceImpl implements SerieService {
 

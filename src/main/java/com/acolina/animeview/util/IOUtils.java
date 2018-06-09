@@ -25,6 +25,7 @@ import java.net.URLConnection;
 
 /**
  * @author Angel Colina
+ * @version 1.0
  */
 public class IOUtils {
 

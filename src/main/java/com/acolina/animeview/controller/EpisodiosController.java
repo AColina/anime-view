@@ -26,9 +26,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * @author angel
+ * @author Angel Colina
+ * @version 1.0
  */
-
 @RestController
 @RequestMapping("/episode")
 @Api(value = "episode", description = "Controlador rest para los episodios")

@@ -5,7 +5,10 @@ import org.springframework.data.annotation.Id;
 import java.io.Serializable;
 import java.util.Objects;
 
-
+/**
+ * @author Angel Colina
+ * @version 1.0
+ */
 public abstract class Entity implements Serializable {
 
     @Id

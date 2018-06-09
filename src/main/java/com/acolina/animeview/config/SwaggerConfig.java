@@ -18,6 +18,7 @@
 package com.acolina.animeview.config;
 
 import java.util.ArrayList;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.PathSelectors;
@@ -30,6 +31,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
  * @author Angel Colina
+ * @version 1.0
  */
 @Configuration
 @EnableSwagger2

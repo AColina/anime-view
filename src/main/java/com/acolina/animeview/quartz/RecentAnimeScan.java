@@ -46,6 +46,7 @@ import java.util.logging.Logger;
 
 /**
  * @author Angel Colina
+ * @version 1.0
  */
 @Component("recentAnimeScan")
 public class RecentAnimeScan {

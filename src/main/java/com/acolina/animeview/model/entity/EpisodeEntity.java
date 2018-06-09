@@ -25,6 +25,7 @@ import java.util.Objects;
 
 /**
  * @author Angel Colina
+ * @version 1.0
  */
 @Document(collection = "episodes")
 public class EpisodeEntity extends Entity implements IEntity {

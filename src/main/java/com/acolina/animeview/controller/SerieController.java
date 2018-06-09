@@ -17,7 +17,6 @@
  */
 package com.acolina.animeview.controller;
 
-
 import com.acolina.animeview.model.dto.response.ResponseDTO;
 import com.acolina.animeview.model.entity.SerieEntity;
 import com.acolina.animeview.services.SerieService;
@@ -27,7 +26,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * @author angel
+ * @author Angel Colina
+ * @version 1.0
  */
 @RestController
 @RequestMapping("/serie")

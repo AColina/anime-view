@@ -22,7 +22,6 @@ import com.acolina.animeview.model.entity.SerieEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-
 /**
  * @author Angel Colina
  * @version 1.0
